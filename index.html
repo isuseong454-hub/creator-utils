@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>크리에이터 유틸리티 — 콘텐츠를 수익으로</title>
+<meta name="description" content="크리에이터 유틸리티(크유) — 크리에이터가 꺼내 쓰는 수익화 도구함. 전 구간을 앱과 사람이 함께 갑니다. 무료 계정 판독부터.">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="icon" href="img/logo.png">
+<style>
+:root{
+  --bg:#050609;
+  --bg2:#0a0d13;
+  --panel:rgba(255,255,255,.045);
+  --panel-line:rgba(255,255,255,.10);
+  --lime:#C8F169;
+  --lime-deep:#9FD630;
+  --lime-glow:rgba(200,241,105,.16);
+  --text:#F2F4EE;
+  --sub:#98A1AC;
+  --mute:#5C6570;
+  --spring:cubic-bezier(.32,1.25,.32,1);
+  --ease:cubic-bezier(.22,.9,.24,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+  letter-spacing:-.01em;
+  overflow-x:clip;
+  min-height:100vh;
+}
+::selection{background:rgba(200,241,105,.25)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* ── 우주 배경 ─────────────────────────── */
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sky::before{ /* 성운 */
+  content:"";position:absolute;inset:-20%;
+  background:
+    radial-gradient(42% 30% at 78% 6%, rgba(200,241,105,.055), transparent 62%),
+    radial-gradient(50% 38% at 12% 30%, rgba(94,118,255,.06), transparent 60%),
+    radial-gradient(45% 32% at 60% 88%, rgba(160,120,255,.045), transparent 60%);
+}
+.sky::after{ /* 미세 입자 */
+  content:"";position:absolute;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 12% 22%, rgba(255,255,255,.5), transparent 100%),
+    radial-gradient(1px 1px at 34% 64%, rgba(255,255,255,.32), transparent 100%),
+    radial-gradient(1.5px 1.5px at 58% 12%, rgba(255,255,255,.4), transparent 100%),
+    radial-gradient(1px 1px at 73% 45%, rgba(255,255,255,.3), transparent 100%),
+    radial-gradient(1px 1px at 88% 74%, rgba(255,255,255,.42), transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 86%, rgba(255,255,255,.28), transparent 100%),
+    radial-gradient(1px 1px at 44% 38%, rgba(255,255,255,.24), transparent 100%),
+    radial-gradient(1px 1px at 92% 18%, rgba(255,255,255,.36), transparent 100%);
+}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.35}
+.star.tw{animation:tw 3.6s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.7}}
+.glow-cursor{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .6s var(--ease);
+  background:radial-gradient(520px 520px at var(--gx,50%) var(--gy,30%), rgba(200,241,105,.05), transparent 70%)}
+body.glow-on .glow-cursor{opacity:1}
+
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* ── 상단 바 ─────────────────────────── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:calc(14px + env(safe-area-inset-top)) 22px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(180deg, rgba(5,6,9,.82), transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16px;letter-spacing:-.02em}
+.logo .mark{filter:drop-shadow(0 0 7px rgba(200,241,105,.35))}
+.top-cta{font-size:13px;font-weight:700;color:var(--sub);border:1px solid var(--panel-line);
+  border-radius:99px;padding:8px 16px;transition:all .25s var(--ease)}
+.top-cta:hover{color:var(--lime);border-color:rgba(200,241,105,.45)}
+
+/* ── 히어로 ─────────────────────────── */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:80px;padding-bottom:60px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.22em;
+  color:var(--lime);margin-bottom:26px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--lime);opacity:.7}
+.hero h1{font-size:clamp(52px,11vw,116px);font-weight:900;line-height:1.02;letter-spacing:-.045em}
+.hero h1 .lime{background:linear-gradient(115deg,var(--lime) 20%,#EAFBB1 55%,var(--lime-deep));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(200,241,105,.22))}
+.hero .sub{margin-top:28px;font-size:clamp(15px,2.2vw,18px);line-height:1.75;color:var(--sub);max-width:560px;word-break:keep-all}
+.hero .sub b{color:var(--text);font-weight:700}
+.cta-row{margin-top:42px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:15px;border-radius:99px;
+  padding:16px 28px;transition:transform .35s var(--spring), box-shadow .3s var(--ease), background .3s var(--ease), border-color .3s;
+  will-change:transform}
+.btn:active{transform:scale(.95)}
+.btn-lime{background:var(--lime);color:#0B1203;box-shadow:0 0 0 0 rgba(200,241,105,0)}
+.btn-lime:hover{box-shadow:0 6px 34px rgba(200,241,105,.35);transform:translateY(-2px)}
+.btn-ghost{border:1px solid var(--panel-line);color:var(--text);background:rgba(255,255,255,.02)}
+.btn-ghost:hover{border-color:rgba(200,241,105,.4);transform:translateY(-2px)}
+.hero-hint{margin-top:64px;font-size:12px;color:var(--mute);display:flex;align-items:center;gap:10px}
+.hero-hint .bar{width:1px;height:34px;background:linear-gradient(180deg,var(--lime),transparent);animation:drip 2s var(--ease) infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ── 마퀴 ─────────────────────────── */
+.marquee{border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);
+  padding:18px 0;overflow:hidden;position:relative;z-index:1;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marquee .track{display:flex;gap:0;width:max-content;animation:mq 36s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.marquee span{font-size:14px;font-weight:600;color:var(--mute);white-space:nowrap;padding:0 14px}
+.marquee i{font-style:normal;color:var(--lime);opacity:.7;font-size:11px}
+
+/* ── 섹션 공통 ─────────────────────────── */
+section{padding:110px 0}
+.sec-eyebrow{font-size:12px;font-weight:800;letter-spacing:.24em;color:var(--lime);margin-bottom:14px}
+.sec-title{font-size:clamp(30px,5.4vw,48px);font-weight:900;letter-spacing:-.04em;line-height:1.15;word-break:keep-all}
+.sec-sub{margin-top:16px;color:var(--sub);font-size:15.5px;line-height:1.7;max-width:520px;word-break:keep-all}
+
+/* 등장 모션 */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease), transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none}
+  .marquee .track,.star.tw,.hero-hint .bar{animation:none}
+}
+
+/* ── 가치 3카드 ─────────────────────────── */
+.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:52px}
+.val{position:relative;border-radius:22px;padding:28px 24px;background:var(--panel);
+  border:1px solid var(--panel-line);overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)} /* 유리 윗선 */
+.val .n{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--lime);margin-bottom:14px}
+.val h3{font-size:19px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px}
+.val p{font-size:14px;line-height:1.7;color:var(--sub);word-break:keep-all}
+
+/* ── 수익화 흐름 레일 ─────────────────────────── */
+.flow-list{margin-top:60px;position:relative;display:flex;flex-direction:column;gap:16px}
+.flow-list::before{content:"";position:absolute;left:27px;top:30px;bottom:30px;width:1px;
+  background:linear-gradient(180deg,transparent,rgba(200,241,105,.35) 8%,rgba(200,241,105,.35) 92%,transparent)}
+.step{position:relative;display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:stretch;
+  cursor:pointer;-webkit-user-select:none;user-select:none}
+.step .node{position:relative;z-index:1;align-self:center;width:56px;height:56px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--bg2);border:1px solid rgba(200,241,105,.35);
+  font-weight:800;font-size:14px;color:var(--lime);
+  transition:box-shadow .3s var(--ease), background .3s}
+.step .card{position:relative;border-radius:24px;padding:26px 28px;background:var(--panel);
+  border:1px solid var(--panel-line);overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  transition:transform .45s var(--spring), border-color .3s var(--ease), background .3s}
+.step .card::after{content:"";position:absolute;inset:0;border-radius:24px;opacity:0;pointer-events:none;
+  background:radial-gradient(320px 200px at var(--mx,50%) var(--my,50%), rgba(200,241,105,.09), transparent 70%);
+  transition:opacity .3s}
+.step:hover .card{transform:translateY(-3px);border-color:rgba(200,241,105,.35)}
+.step:hover .card::after{opacity:1}
+.step:hover .node{box-shadow:0 0 22px rgba(200,241,105,.35);background:#0d1208}
+.step:active .card{transform:scale(.985)}
+.step .card{display:flex;gap:20px;align-items:flex-start}
+.appic{flex:none;width:54px;height:54px;border-radius:15px;overflow:hidden;
+  background:#0B0D10;border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+  transition:box-shadow .3s var(--ease), transform .35s var(--spring)}
+.appic img{width:100%;height:100%;object-fit:cover;display:block}
+.step:hover .appic{box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 0 20px rgba(200,241,105,.22);transform:scale(1.05)}
+.step .ctxt{flex:1;min-width:0}
+.step .cat{font-size:11.5px;font-weight:800;letter-spacing:.18em;color:var(--mute);margin-bottom:8px}
+.step h3{font-size:clamp(19px,3vw,24px);font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.step h3 .tag{font-size:11px;font-weight:800;letter-spacing:.04em;padding:4px 10px;border-radius:99px;
+  background:rgba(200,241,105,.12);color:var(--lime);border:1px solid rgba(200,241,105,.25)}
+.step p{margin-top:9px;font-size:14.5px;line-height:1.7;color:var(--sub);max-width:640px;word-break:keep-all}
+.step .go{position:absolute;right:24px;top:50%;transform:translateY(-50%);
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--panel-line);color:var(--sub);
+  transition:all .35s var(--spring)}
+.step:hover .go{background:var(--lime);color:#0B1203;border-color:var(--lime);transform:translateY(-50%) rotate(-45deg)}
+
+/* ── 상품 ─────────────────────────── */
+.prods{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.prod{position:relative;border-radius:26px;padding:34px 28px;background:var(--panel);
+  border:1px solid var(--panel-line);display:flex;flex-direction:column;gap:0;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  transition:transform .45s var(--spring), border-color .3s}
+.prod:hover{transform:translateY(-4px)}
+.prod .k{font-size:11.5px;font-weight:800;letter-spacing:.2em;color:var(--mute);margin-bottom:16px}
+.prod h3{font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:10px}
+.prod .d{font-size:14px;line-height:1.7;color:var(--sub);word-break:keep-all;margin-bottom:22px}
+.prod ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
+.prod li{font-size:13.5px;color:var(--sub);display:flex;gap:9px;align-items:flex-start}
+.prod li::before{content:"";flex:none;width:5px;height:5px;border-radius:50%;background:var(--lime);margin-top:7px}
+.prod .price{margin-top:auto;font-size:15px;font-weight:800;color:var(--text);margin-bottom:14px}
+.prod .price small{display:block;font-weight:500;font-size:12px;color:var(--mute);margin-top:3px}
+.prod .btn{justify-content:center}
+.prod.hot{border-color:rgba(200,241,105,.45);background:linear-gradient(180deg,rgba(200,241,105,.07),var(--panel) 40%)}
+.prod.hot::before{content:"동행의 핵심";position:absolute;top:18px;right:18px;font-size:10.5px;font-weight:800;
+  letter-spacing:.06em;color:#0B1203;background:var(--lime);padding:5px 11px;border-radius:99px}
+
+/* ── 소개 ─────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;margin-top:56px;align-items:start}
+.about-txt p{font-size:15.5px;line-height:1.85;color:var(--sub);word-break:keep-all}
+.about-txt p+p{margin-top:16px}
+.about-txt b{color:var(--text)}
+.quote{margin-top:28px;padding:22px 24px;border-left:2px solid var(--lime);background:rgba(200,241,105,.05);
+  border-radius:0 18px 18px 0;font-size:16px;font-weight:700;letter-spacing:-.02em;line-height:1.6;word-break:keep-all}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{border-radius:20px;padding:24px 18px;background:var(--panel);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);text-align:center}
+.stat .num{font-size:clamp(28px,4.5vw,40px);font-weight:900;letter-spacing:-.04em;color:var(--lime)}
+.stat .lab{margin-top:6px;font-size:12.5px;color:var(--sub)}
+
+/* ── 마지막 CTA ─────────────────────────── */
+.final{padding:150px 0 170px;text-align:center}
+.final h2{font-size:clamp(34px,7vw,64px);font-weight:900;letter-spacing:-.045em;line-height:1.12;word-break:keep-all}
+.final .sub{margin:20px auto 0;max-width:460px}
+.final .cta-row{justify-content:center}
+
+footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + env(safe-area-inset-bottom));
+  text-align:center;font-size:12.5px;color:var(--mute)}
+
+/* ── 유리 도크 ─────────────────────────── */
+.dock{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  z-index:60;display:flex;align-items:center;gap:4px;
+  padding:8px;border-radius:99px;
+  background:rgba(16,18,22,.72);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);backdrop-filter:blur(24px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 14px 44px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12)}
+.dock button{position:relative;width:52px;height:44px;border-radius:99px;display:grid;place-items:center;
+  color:#B9C0C9;transition:color .25s, background .3s var(--ease), transform .35s var(--spring)}
+.dock button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dock button:active{transform:scale(.88)}
+.dock button.on{color:var(--lime);background:rgba(255,255,255,.08)}
+.dock button.on::after{content:"";position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)}
+.dock .dk-cta{width:auto;padding:0 20px;background:var(--lime);color:#0B1203;font-weight:800;font-size:13.5px;height:44px;margin-left:4px}
+.dock .dk-cta:hover{box-shadow:0 4px 22px rgba(200,241,105,.4)}
+
+/* ── 상세 페이지 오버레이 ─────────────────────────── */
+.sheet{position:fixed;inset:0;z-index:80;display:none;overflow-y:auto;overscroll-behavior:contain;
+  background:rgba(5,6,9,.6);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.sheet.open{display:block}
+.sheet-inner{min-height:100%;max-width:760px;margin:0 auto;padding:110px 26px 140px;
+  opacity:0;transform:translateY(30px) scale(.98)}
+.sheet.open .sheet-inner{animation:sheetIn .55s var(--spring) forwards}
+@keyframes sheetIn{to{opacity:1;transform:none}}
+.sheet-close{position:fixed;top:calc(18px + env(safe-area-inset-top));right:20px;z-index:81;
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  color:var(--text);transition:transform .35s var(--spring), background .25s}
+.sheet-close:hover{background:rgba(255,255,255,.14)}
+.sheet-close:active{transform:scale(.88)}
+.sheet .cat{font-size:12px;font-weight:800;letter-spacing:.22em;color:var(--lime);margin-bottom:16px}
+.sheet h2{font-size:clamp(32px,6vw,52px);font-weight:900;letter-spacing:-.04em;line-height:1.12;word-break:keep-all}
+.sheet .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.sheet .tag-row span{font-size:12px;font-weight:700;padding:6px 13px;border-radius:99px;
+  background:rgba(255,255,255,.06);border:1px solid var(--panel-line);color:var(--sub)}
+.sheet .lead{margin-top:28px;font-size:16.5px;line-height:1.85;color:var(--sub);word-break:keep-all}
+.sheet .lead b{color:var(--text)}
+.sheet .feats{margin-top:40px;display:flex;flex-direction:column;gap:12px}
+.sh-lab+.feats{margin-top:0}
+.sheet .feat{border-radius:20px;padding:22px 24px;background:var(--panel);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
+.sheet .feat h4{font-size:15.5px;font-weight:800;margin-bottom:7px;display:flex;align-items:center;gap:9px}
+.sheet .feat h4::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)}
+.sheet .feat p{font-size:14px;line-height:1.7;color:var(--sub);word-break:keep-all}
+.sheet .sheet-cta{margin-top:44px;display:flex;gap:12px;flex-wrap:wrap}
+.sheet-ic{width:72px;height:72px;border-radius:19px;overflow:hidden;margin-bottom:24px;
+  background:#0B0D10;border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 0 34px rgba(200,241,105,.12)}
+.sheet-ic img{width:100%;height:100%;object-fit:cover;display:block}
+.sh-lab{margin-top:46px;margin-bottom:14px;font-size:12px;font-weight:800;letter-spacing:.22em;color:var(--lime)}
+/* 상세 히어로 + 데모 목업 */
+.sheet-hero{margin-top:30px;border-radius:22px;overflow:hidden;background:#0A0D12;
+  border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.sheet-hero img{width:100%;display:block}
+.sheet-hero .pad{padding:24px 26px}
+.mk{margin-top:14px;border-radius:14px;background:#0A0D12;border:1px solid rgba(255,255,255,.08);padding:14px 16px}
+.mk-t{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--mute);margin-bottom:10px}
+.gate{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:11px;margin:6px 0;
+  font-size:12.5px;font-weight:700;color:var(--sub);background:rgba(255,255,255,.03)}
+.gate .st{margin-left:auto;font-size:11px;font-weight:800;color:var(--mute);white-space:nowrap}
+.gate.stuck{background:rgba(200,241,105,.08);border:1px solid rgba(200,241,105,.3);color:var(--text)}
+.gate.stuck .st{color:var(--lime)}
+.rx{margin-top:12px;padding:11px 13px;border-radius:11px;background:rgba(200,241,105,.07);
+  border:1px solid rgba(200,241,105,.2);font-size:12.5px;line-height:1.6;color:var(--text)}
+.bub{max-width:82%;width:fit-content;padding:9px 13px;border-radius:14px;margin:7px 0;
+  font-size:12.5px;line-height:1.55;background:rgba(255,255,255,.07);color:var(--text)}
+.bub.me{margin-left:auto;background:rgba(200,241,105,.13);border:1px solid rgba(200,241,105,.25)}
+.bub .who{display:block;font-size:10px;font-weight:700;color:var(--mute);margin-bottom:3px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;margin:3px 5px 3px 0;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  font-size:11.5px;font-weight:700;color:var(--sub)}
+.chip.on{background:rgba(200,241,105,.1);border-color:rgba(200,241,105,.3);color:var(--lime)}
+.fl-ar{color:var(--lime);font-weight:800;margin:0 4px}
+.ccards{display:flex;gap:16px;justify-content:center;padding:18px 0 10px}
+.ccard{width:104px;aspect-ratio:4/5;border-radius:12px;background:#10141b;
+  border:1px solid rgba(255,255,255,.12);padding:12px;display:flex;flex-direction:column;gap:7px}
+.ccard.cover{transform:rotate(-4deg);border-color:rgba(200,241,105,.4);box-shadow:0 8px 26px rgba(0,0,0,.45)}
+.ccard.detail{transform:rotate(3deg)}
+.ccard .big{font-size:11.5px;font-weight:900;line-height:1.35;color:var(--text)}
+.ccard .big i{font-style:normal;color:var(--lime)}
+.skl{height:7px;border-radius:4px;background:rgba(255,255,255,.10)}
+.skl.dim{background:rgba(255,255,255,.06)}
+.mk-cap{margin-top:10px;text-align:center;font-size:11.5px;color:var(--mute)}
+.shotimg{width:100%;display:block;border-radius:14px;margin-top:14px;
+  border:1px solid rgba(255,255,255,.10);box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.pfrow{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pfrow .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,rgba(200,241,105,.5),rgba(200,241,105,.12));flex:none}
+.pfrow .skl{flex:1}
+.pain{position:relative;margin-top:34px;padding:26px 28px 24px 56px;border-radius:20px;
+  background:rgba(255,255,255,.03);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  font-size:17.5px;font-weight:700;letter-spacing:-.02em;line-height:1.55;word-break:keep-all}
+.pain::before{content:"“";position:absolute;left:24px;top:16px;font-size:34px;font-weight:900;color:var(--lime);opacity:.85}
+.pain small{display:block;margin-top:10px;font-weight:500;font-size:13.5px;color:var(--mute)}
+.ba{margin-top:14px;display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch}
+.ba .b,.ba .a{border-radius:20px;padding:20px 22px;font-size:14px;line-height:1.65;word-break:keep-all}
+.ba .b{background:var(--panel);border:1px solid var(--panel-line);color:var(--mute)}
+.ba .a{background:rgba(200,241,105,.07);border:1px solid rgba(200,241,105,.35);color:var(--text);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.ba .k{display:block;font-size:10.5px;font-weight:800;letter-spacing:.2em;margin-bottom:9px}
+.ba .b .k{color:var(--mute)} .ba .a .k{color:var(--lime)}
+.ba .arr{align-self:center;color:var(--lime);display:grid;place-items:center}
+.how{display:flex;flex-direction:column}
+.how .row{display:flex;gap:18px;align-items:flex-start;padding:16px 4px;border-bottom:1px solid rgba(255,255,255,.06)}
+.how .row:last-child{border-bottom:0}
+.how .n{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-size:12.5px;font-weight:900;color:var(--lime);border:1px solid rgba(200,241,105,.35)}
+.how .row p{font-size:14.5px;line-height:1.65;color:var(--sub);padding-top:4px;word-break:keep-all}
+.how .row p b{color:var(--text)}
+
+/* ── 로그인 게이트 (gt-) ─────────────────── */
+.gt{position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:24px;
+  background:rgba(5,6,9,.78);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
+.gt.on{display:grid}
+.gt-card{width:100%;max-width:400px;border-radius:26px;padding:36px 30px;
+  background:rgba(16,18,22,.85);border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 30px 80px rgba(0,0,0,.6);
+  opacity:0;transform:translateY(24px) scale(.97)}
+.gt.on .gt-card{animation:sheetIn .5s var(--spring) forwards}
+.gt-card .lg{width:52px;height:52px;border-radius:14px;margin-bottom:18px}
+.gt-card h3{font-size:22px;font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+.gt-card .s{font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:24px;word-break:keep-all}
+.gt-lab{font-size:11.5px;font-weight:800;letter-spacing:.14em;color:var(--mute);margin:14px 0 8px}
+.gt-code{width:100%;padding:14px 16px;border-radius:14px;font-size:17px;font-weight:800;letter-spacing:.3em;
+  background:rgba(255,255,255,.05);border:1px solid var(--panel-line);color:var(--text);
+  outline:none;text-transform:uppercase;text-align:center}
+.gt-code:focus{border-color:rgba(200,241,105,.5)}
+.gt-pins{display:flex;gap:10px;justify-content:center}
+.gt-pin{width:56px;height:60px;border-radius:14px;text-align:center;font-size:22px;font-weight:900;
+  background:rgba(255,255,255,.05);border:1px solid var(--panel-line);color:var(--text);outline:none}
+.gt-pin:focus{border-color:rgba(200,241,105,.5)}
+.gt-btn{width:100%;margin-top:22px;padding:15px;border-radius:14px;font-size:15px;font-weight:800;
+  background:var(--lime);color:#0B1203;transition:transform .3s var(--spring)}
+.gt-btn:active{transform:scale(.96)}
+.gt-msg{margin-top:12px;min-height:18px;font-size:12.5px;color:var(--sub);text-align:center;word-break:keep-all}
+.gt-msg.warn{color:var(--lime)}
+.gt-demo{width:100%;margin-top:8px;padding:13px;border-radius:14px;font-size:13.5px;font-weight:700;
+  border:1px dashed rgba(200,241,105,.4);color:var(--lime);background:rgba(200,241,105,.05)}
+.gt-close{position:fixed;top:calc(18px + env(safe-area-inset-top));right:20px;z-index:91;
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--text)}
+@keyframes gtShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.gt-card.shake{animation:gtShake .3s ease}
+
+/* ── 워크스페이스 (ws-) ─────────────────── */
+.ws{position:fixed;inset:0;z-index:85;display:none;background:var(--bg)}
+.ws.on{display:flex}
+.ws::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(40% 30% at 80% 0%, rgba(200,241,105,.05), transparent 60%),
+             radial-gradient(45% 35% at 10% 90%, rgba(94,118,255,.05), transparent 60%)}
+.ws-side{width:240px;flex:none;display:flex;flex-direction:column;gap:4px;overflow-y:auto;
+  padding:26px 16px calc(26px + env(safe-area-inset-bottom));
+  background:rgba(14,16,20,.6);border-right:1px solid rgba(255,255,255,.07)}
+.ws-brand{display:flex;align-items:center;gap:9px;font-weight:900;font-size:15px;padding:0 10px;margin-bottom:18px}
+.ws-brand img{width:26px;height:26px;border-radius:8px}
+.ws-g{font-size:10.5px;font-weight:800;letter-spacing:.18em;color:var(--mute);padding:16px 10px 6px}
+.ws-it{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;
+  font-size:13.5px;font-weight:700;color:var(--sub);cursor:pointer;-webkit-user-select:none;user-select:none;
+  transition:background .2s, color .2s}
+.ws-it:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.ws-it.on{background:rgba(200,241,105,.1);color:var(--lime)}
+.ws-it .ic{width:18px;text-align:center}
+.ws-side .ws-tag{margin-top:auto;padding:12px;border-radius:12px;text-align:center;
+  border:1px dashed rgba(200,241,105,.35);font-size:11.5px;color:var(--lime);word-break:keep-all}
+.ws-main{flex:1;overflow-y:auto;padding:34px clamp(20px,4vw,48px) 120px}
+.ws-view{display:none;max-width:860px;margin:0 auto}
+.ws-view.on{display:block;animation:wsIn .4s var(--ease)}
+@keyframes wsIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.ws-h1{font-size:clamp(24px,4vw,32px);font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+.ws-sub{font-size:13.5px;color:var(--sub);margin-bottom:26px;line-height:1.65;word-break:keep-all}
+.ws-card{border-radius:20px;padding:22px 24px;background:var(--panel);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);margin-bottom:14px}
+.ws-card h4{font-size:15.5px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ws-card p{font-size:13.5px;color:var(--sub);line-height:1.7;word-break:keep-all}
+.ws-ex{font-size:10px;font-weight:800;letter-spacing:.08em;padding:3px 8px;border-radius:99px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--mute)}
+.ws-soon{border-style:dashed;border-color:rgba(200,241,105,.3);background:rgba(200,241,105,.04)}
+.ws-soon h4{color:var(--lime)}
+.ws-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ws-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:10px 0 6px}
+.ws-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--lime-deep),var(--lime))}
+.ws-rail{display:flex;align-items:flex-start;gap:0;margin:18px 0 6px;overflow-x:auto;padding-bottom:6px}
+.ws-node{flex:1;min-width:76px;text-align:center;position:relative}
+.ws-node::before{content:"";position:absolute;top:14px;left:50%;width:100%;height:1px;background:rgba(255,255,255,.12)}
+.ws-node:last-child::before{display:none}
+.ws-node .dot{position:relative;z-index:1;width:28px;height:28px;border-radius:50%;margin:0 auto 8px;
+  display:grid;place-items:center;font-size:11px;font-weight:800;
+  background:var(--bg2);border:1px solid rgba(255,255,255,.18);color:var(--mute)}
+.ws-node.now .dot{border-color:var(--lime);color:var(--lime);box-shadow:0 0 16px rgba(200,241,105,.35)}
+.ws-node .nm{font-size:11px;color:var(--sub);word-break:keep-all}
+.ws-node.now .nm{color:var(--lime);font-weight:800}
+.ws-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.ws-app{border-radius:18px;padding:16px;background:var(--panel);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);text-align:center;cursor:pointer;
+  transition:transform .35s var(--spring), border-color .25s}
+.ws-app:hover{transform:translateY(-3px);border-color:rgba(200,241,105,.35)}
+.ws-app img{width:52px;height:52px;border-radius:14px;margin:0 auto 10px;display:block;
+  border:1px solid rgba(255,255,255,.12)}
+.ws-app .nm{font-size:13px;font-weight:800;margin-bottom:3px}
+.ws-app .st{font-size:11px;color:var(--mute)}
+.ws-close{position:fixed;top:calc(16px + env(safe-area-inset-top));right:18px;z-index:88;
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--text);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .3s var(--spring)}
+.ws-close:active{transform:scale(.88)}
+@media(max-width:820px){
+  .ws{flex-direction:column}
+  .ws-side{width:100%;flex-direction:row;align-items:center;gap:2px;overflow-x:auto;overflow-y:hidden;
+    padding:14px 60px 12px 14px;border-right:0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .ws-brand,.ws-g,.ws-side .ws-tag{display:none}
+  .ws-it{flex:none;padding:8px 13px;font-size:12.5px}
+  .ws-grid2{grid-template-columns:1fr}
+  .ws-main{padding-top:22px}
+}
+
+/* ── 반응형 ─────────────────────────── */
+@media(max-width:820px){
+  .vals{grid-template-columns:1fr}
+  .appic{width:44px;height:44px;border-radius:12px}
+  .appic svg{width:22px;height:22px}
+  .step .card{gap:14px;flex-direction:column}
+  .ba{grid-template-columns:1fr}
+  .ba .arr{transform:rotate(90deg);padding:2px 0}
+  .prods{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr;gap:36px}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .step{grid-template-columns:44px 1fr;gap:12px}
+  .step .node{width:44px;height:44px;font-size:12.5px}
+  .flow-list::before{left:21px}
+  .step .go{display:none}
+  section{padding:84px 0}
+}
+</style>
+</head>
+<body>
+
+<div class="sky" id="sky"></div>
+<div class="glow-cursor"></div>
+
+<header class="topbar">
+  <a class="logo" href="#top"><img class="mark" src="img/logo.png" width="28" height="28" alt="">크리에이터 유틸</a>
+  <div style="display:flex;gap:8px">
+    <a class="top-cta" href="#contact">1:1 문의</a>
+    <button class="top-cta" id="loginBtn" style="color:var(--lime);border-color:rgba(200,241,105,.4)">로그인</button>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <!-- 히어로 -->
+  <section class="hero">
+    <div class="eyebrow">CREATOR UTILS · MONETIZE · FLOW</div>
+    <h1>콘텐츠를,<br><span class="lime">수익</span>으로.</h1>
+    <p class="sub">만드는 것까지는 누구나 합니다. 크리에이터 유틸은 그다음 —
+      <b>조회수가 통장에 닿기까지의 전 구간</b>을 직접 만든 도구와 사람이 함께 갑니다.</p>
+    <div class="cta-row">
+      <a class="btn btn-lime" href="#contact">무료 계정 판독 받기</a>
+      <a class="btn btn-ghost" href="#flow">수익화 흐름 보기 ↓</a>
+    </div>
+    <div class="hero-hint"><span class="bar"></span>아래로 내리면, 수익까지의 6단계</div>
+  </section>
+
+</main>
+
+<!-- 마퀴 -->
+<div class="marquee" aria-hidden="true">
+  <div class="track" id="mqTrack">
+    <span>계정 판독</span><i>✦</i><span>벤치마킹</span><i>✦</i><span>후킹</span><i>✦</i><span>원고</span><i>✦</i><span>썸네일</span><i>✦</i><span>캐러셀</span><i>✦</i><span>링크인바이오</span><i>✦</i><span>DM 자동화</span><i>✦</i><span>알고리즘</span><i>✦</i><span>전환</span><i>✦</i><span>월 동행</span><i>✦</i><span>브랜딩</span><i>✦</i>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 가치 3카드 -->
+  <section id="how">
+    <div class="rv">
+      <div class="sec-eyebrow">HOW WE WORK</div>
+      <h2 class="sec-title">앱과 사람이,<br>같이 갑니다.</h2>
+    </div>
+    <div class="vals">
+      <div class="val rv"><div class="n">01 — 판독은 무료</div>
+        <h3>먼저 계정을 봐드립니다</h3>
+        <p>눈이 맞는지 확인하는 데 돈을 받지 않습니다. 지금 계정에서 수익까지 몇 걸음이 남았는지, 처방 한 장으로 돌려드립니다.</p></div>
+      <div class="val rv"><div class="n">02 — 사람이 동행</div>
+        <h3>월 단위로 함께 갑니다</h3>
+        <p>크리에이터에게 가장 비싼 건 혼자 헤매는 시간입니다. 매달 피드백과 방향 교정으로, 헤매는 구간을 잘라냅니다.</p></div>
+      <div class="val rv"><div class="n">03 — 앱이 대신</div>
+        <h3>반복 작업은 도구가 합니다</h3>
+        <p>벤치마킹 분해, 원고 훈련, 링크인바이오, DM 응대 — 직접 만들어 쓰는 도구들이 손을 대신합니다. 당신은 콘텐츠에만.</p></div>
+    </div>
+  </section>
+
+  <!-- 수익화 흐름 -->
+  <section id="flow">
+    <div class="rv">
+      <div class="sec-eyebrow">MONETIZE FLOW</div>
+      <h2 class="sec-title">수익까지의 6단계.<br>단계마다 도구가 있습니다.</h2>
+      <p class="sec-sub">크리에이터가 수익화에 이르는 순서 그대로 놓았습니다. 각 단계를 누르면 자세한 설명이 열립니다.</p>
+    </div>
+    <div class="flow-list" id="flowList"></div>
+  </section>
+
+  <!-- 상품 -->
+  <section id="products">
+    <div class="rv">
+      <div class="sec-eyebrow">PROGRAMS</div>
+      <h2 class="sec-title">필요한 깊이만큼<br>고르세요.</h2>
+    </div>
+    <div class="prods">
+      <div class="prod rv">
+        <div class="k">CLASS</div>
+        <h3>온라인 강의</h3>
+        <div class="d">인스타그램 마케팅의 기준을 처음부터 끝까지. 헤어디자이너·1인 사업자·크리에이터를 위한 실전 커리큘럼.</div>
+        <ul><li>계정 설계부터 콘텐츠 제작까지</li><li>평생 소장, 계속 업데이트</li><li>수강생 전용 도구 이용</li></ul>
+        <div class="price">커리큘럼 공개 예정<small>사전 문의 가능</small></div>
+        <a class="btn btn-ghost" href="#contact">강의 문의 →</a>
+      </div>
+      <div class="prod hot rv">
+        <div class="k">MEMBERSHIP</div>
+        <h3>월 동행 멤버십</h3>
+        <div class="d">매달 계정을 같이 보고, 방향을 같이 잡습니다. 시간·돈·안정을 동시에 만드는 유일한 형태.</div>
+        <ul><li>월 1회 계정 피드백</li><li>수익화 앱 전체 이용</li><li>멤버 전용 커뮤니티</li></ul>
+        <div class="price">오픈 준비 중<small>사전 신청 시 우선 안내</small></div>
+        <a class="btn btn-lime" href="#contact">사전 신청 →</a>
+      </div>
+      <div class="prod rv">
+        <div class="k">1:1 CONSULTING</div>
+        <h3>1:1 브랜딩 컨설팅</h3>
+        <div class="d">당신 계정 하나만 놓고, 포지셔닝부터 상품 설계까지. 소수만 받는 고밀도 세션.</div>
+        <ul><li>계정 정밀 판독 + 처방</li><li>브랜딩·상품 구조 설계</li><li>실행 로드맵 제공</li></ul>
+        <div class="price">소수 한정<small>일정 협의 후 진행</small></div>
+        <a class="btn btn-ghost" href="#contact">신청하기 →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 소개 -->
+  <section id="about">
+    <div class="rv">
+      <div class="sec-eyebrow">WHO</div>
+      <h2 class="sec-title">고객관점 — 이수성</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-txt rv">
+        <p><b>보는 눈을 도구로 만드는 사람입니다.</b> 헤어디자이너 인스타그램 마케팅을 가르치며, 콘텐츠를 판별하는 기준을 그대로 앱으로 굳혀 왔습니다. 판독지·후킹 100·통찰 엔진 — 전부 수강생이 제 눈을 빌려 쓸 수 있게 만든 장치입니다.</p>
+        <p>"이거 별로예요"라고 말하지 않습니다. <b>"이 셋 중 몇 개가 들어갔나요?"</b>라고 묻습니다. 감각이 아니라 기준으로 가르칠 때만, 배운 사람이 혼자서도 갈 수 있으니까요.</p>
+        <div class="quote">"사람들은 제품을 사지 않습니다.<br>더 나은 자신을 삽니다."</div>
+      </div>
+      <div class="stats rv">
+        <div class="stat"><div class="num" data-count="12">0</div><div class="lab">직접 만든 도구</div></div>
+        <div class="stat"><div class="num" data-count="6">0</div><div class="lab">수익화 단계</div></div>
+        <div class="stat"><div class="num" data-count="100">0</div><div class="lab">후킹 제목 자산</div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 마지막 CTA -->
+<div class="wrap">
+  <section class="final" id="contact">
+    <div class="rv">
+      <div class="sec-eyebrow" style="text-align:center">START NOW</div>
+      <h2>지금, 계정부터<br>보여주세요.</h2>
+      <p class="sub sec-sub" style="text-align:center;margin-left:auto;margin-right:auto">판독은 무료입니다. 계정 링크 하나 보내주시면,<br>수익까지 몇 걸음 남았는지 알려드립니다.</p>
+      <div class="cta-row">
+        <a class="btn btn-lime" href="mailto:isuseong454@gmail.com?subject=무료 계정 판독 신청&body=계정 링크: ">무료 계정 판독 신청</a>
+        <a class="btn btn-ghost" href="mailto:isuseong454@gmail.com?subject=1:1 문의">1:1 문의</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>크리에이터 유틸리티(크유) © 2026 · 콘텐츠를 수익으로 · by 고객관점</footer>
+
+<!-- 유리 도크 -->
+<nav class="dock" id="dock">
+  <button data-go="#top" class="on" aria-label="홈">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></button>
+  <button data-go="#flow" aria-label="수익화 흐름">
+    <svg viewBox="0 0 24 24"><circle cx="6" cy="5" r="2.2"/><circle cx="18" cy="12" r="2.2"/><circle cx="6" cy="19" r="2.2"/><path d="M8 5h6a4 4 0 0 1 0 8H10a4 4 0 0 0 0 8h4"/></svg></button>
+  <button data-go="#products" aria-label="상품">
+    <svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12.2a1.8 1.8 0 0 1-1.8 1.6H8a1.8 1.8 0 0 1-1.8-1.6L5 8Z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg></button>
+  <button data-go="#about" aria-label="소개">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20.5c1.4-3.6 4.2-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg></button>
+  <button class="dk-cta" data-go="#contact">무료 판독</button>
+</nav>
+
+<!-- 로그인 게이트 -->
+<div class="gt" id="loginGate">
+  <button class="gt-close" id="gateClose" aria-label="닫기">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="gt-card" id="gateCard">
+    <img class="lg" src="img/logo.png" alt="">
+    <h3>내 공간으로</h3>
+    <div class="s">동행을 시작하면 코드가 발급됩니다.<br>코드 하나로 강의·앱·판독 기록이 전부 이 안에.</div>
+    <div class="gt-lab">발급받은 코드 (6자)</div>
+    <input class="gt-code" id="gtCode" maxlength="6" placeholder="ABC123" autocomplete="off">
+    <div class="gt-lab">PIN (4자리)</div>
+    <div class="gt-pins">
+      <input class="gt-pin" maxlength="1" inputmode="numeric"><input class="gt-pin" maxlength="1" inputmode="numeric"><input class="gt-pin" maxlength="1" inputmode="numeric"><input class="gt-pin" maxlength="1" inputmode="numeric">
+    </div>
+    <button class="gt-btn" id="gtEnter">입장하기 →</button>
+    <div class="gt-msg" id="gtMsg"></div>
+    <button class="gt-demo" id="gtDemo">👀 미리보기로 둘러보기 — 동행하면 받는 공간</button>
+  </div>
+</div>
+
+<!-- 워크스페이스 -->
+<div class="ws" id="ws">
+  <button class="ws-close" id="wsClose" aria-label="나가기">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <nav class="ws-side" id="wsSide">
+    <div class="ws-brand"><img src="img/logo.png" alt="">크리에이터 유틸</div>
+    <div class="ws-g">내 공간</div>
+    <div class="ws-it on" data-v="home"><span class="ic">🏠</span>홈</div>
+    <div class="ws-it" data-v="course"><span class="ic">🎓</span>내 강의</div>
+    <div class="ws-it" data-v="buy"><span class="ic">🧾</span>내 구매</div>
+    <div class="ws-g">내 도구</div>
+    <div class="ws-it" data-v="apps"><span class="ic">⚡</span>내 앱</div>
+    <div class="ws-it" data-v="scan"><span class="ic">📋</span>판독 보관함</div>
+    <div class="ws-g">동행</div>
+    <div class="ws-it" data-v="member"><span class="ic">💳</span>멤버십</div>
+    <div class="ws-it" data-v="consult"><span class="ic">🗓</span>1:1 컨설팅</div>
+    <div class="ws-g">문의</div>
+    <div class="ws-it" data-v="ask"><span class="ic">💬</span>바로 묻기</div>
+    <div class="ws-tag">미리보기 모드 — 동행을 시작하면 진짜 내 데이터로 채워집니다</div>
+  </nav>
+  <main class="ws-main">
+
+    <section class="ws-view on" data-v="home">
+      <div class="ws-h1">반가워요 👋</div>
+      <div class="ws-sub">수익까지의 6단계 중, 지금 여기에 있습니다.</div>
+      <div class="ws-card">
+        <h4>내 수익화 지도</h4>
+        <div class="ws-rail">
+          <div class="ws-node now"><div class="dot">01</div><div class="nm">판독</div></div>
+          <div class="ws-node"><div class="dot">02</div><div class="nm">소재</div></div>
+          <div class="ws-node"><div class="dot">03</div><div class="nm">제작</div></div>
+          <div class="ws-node"><div class="dot">04</div><div class="nm">비주얼</div></div>
+          <div class="ws-node"><div class="dot">05</div><div class="nm">전환</div></div>
+          <div class="ws-node"><div class="dot">06</div><div class="nm">판매</div></div>
+        </div>
+        <p>출발점은 언제나 판독입니다. 계정을 보내면 다음 단계가 열립니다.</p>
+      </div>
+      <div class="ws-card ws-soon">
+        <h4>오늘 할 일 — 하나만</h4>
+        <p>무료 계정 판독 신청하기. 링크 하나 보내면 끝. 나머지 다섯 단계는 그다음에 생각해도 됩니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="course">
+      <div class="ws-h1">내 강의</div>
+      <div class="ws-sub">수강 중인 강의와 진도가 여기 담깁니다.</div>
+      <div class="ws-card">
+        <h4>인스타그램 마케팅의 기준 <span class="ws-ex">예시</span></h4>
+        <div class="ws-bar"><i style="width:42%"></i></div>
+        <p>4강 / 총 9강 · 이어서 보기 — 5강 «후킹은 문장이 아니라 장면»</p>
+      </div>
+      <div class="ws-card ws-soon">
+        <h4>다음 강의가 들어올 자리</h4>
+        <p>커리큘럼이 공개되면 이 칸부터 채워집니다. 수강생은 로그인만 하면 평생 다시 볼 수 있습니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="buy">
+      <div class="ws-h1">내 구매</div>
+      <div class="ws-sub">구매한 강의·멤버십·컨설팅 내역이 정리됩니다.</div>
+      <div class="ws-card">
+        <h4>온라인 강의 · 평생 소장 <span class="ws-ex">예시</span></h4>
+        <p>2026. 08. 01 · 계좌이체 · 코드 AB12CD 발급 완료</p>
+      </div>
+      <div class="ws-card ws-soon">
+        <h4>영수증도 여기서</h4>
+        <p>결제 내역과 발급 코드가 한 줄씩 쌓입니다. 잃어버릴 일이 없습니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="apps">
+      <div class="ws-h1">내 앱</div>
+      <div class="ws-sub">동행 중에는 이 도구들을 코드 하나로 씁니다. 반복 작업은 앱이 대신합니다.</div>
+      <div class="ws-apps">
+        <a class="ws-app" href="https://isuseong454-hub.github.io/Content-Masters/" target="_blank" rel="noopener"><img src="img/app-masters.png" alt=""><div class="nm">컨텐츠 마스터즈</div><div class="st">제작 · 훈련</div></a>
+        <a class="ws-app" href="https://isuseong454-hub.github.io/idea-folder/" target="_blank" rel="noopener"><img src="img/app-idea.png" alt=""><div class="nm">아이디어 폴더</div><div class="st">소재 창고</div></a>
+        <a class="ws-app" href="https://isuseong454-hub.github.io/Carousel/" target="_blank" rel="noopener"><img src="img/app-carousel.png" alt=""><div class="nm">캐러셀 공장</div><div class="st">비주얼</div></a>
+        <a class="ws-app" href="https://isuseong454-hub.github.io/content-hub/" target="_blank" rel="noopener"><img src="img/app-hub.png" alt=""><div class="nm">컨텐츠 허브</div><div class="st">전환</div></a>
+        <a class="ws-app" href="https://isuseong454-hub.github.io/DM-biseo/" target="_blank" rel="noopener"><img src="img/app-dm.png" alt=""><div class="nm">DM 비서</div><div class="st">소통 · 판매</div></a>
+      </div>
+      <div class="ws-card ws-soon" style="margin-top:14px">
+        <h4>입장 코드는 동행과 함께</h4>
+        <p>타일을 누르면 앱이 열립니다. 로그인 코드는 동행(멤버십·강의)을 시작하면 발급됩니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="scan">
+      <div class="ws-h1">판독 보관함</div>
+      <div class="ws-sub">받은 판독과 처방이 시간순으로 쌓입니다. 성장의 기록이 됩니다.</div>
+      <div class="ws-card">
+        <h4>1차 판독 <span class="ws-ex">예시</span></h4>
+        <p>후킹 통과 · 구조 통과 · <b style="color:var(--lime)">전환에서 막힘</b><br>처방 — 프로필 첫 줄을 «누구를 위한 계정인지»로.</p>
+      </div>
+      <div class="ws-card ws-soon">
+        <h4>첫 판독을 받아보세요</h4>
+        <p>무료입니다. 계정 링크 하나 보내면, 첫 번째 카드가 여기 꽂힙니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="member">
+      <div class="ws-h1">멤버십</div>
+      <div class="ws-sub">매달 같이 보고, 같이 잡는 월 동행.</div>
+      <div class="ws-card">
+        <h4>동행 상태 — 시작 전</h4>
+        <p>월 1회 계정 피드백 · 수익화 앱 전체 이용 · 멤버 커뮤니티. 가격과 오픈 일정은 곧 공개됩니다.</p>
+      </div>
+      <div class="ws-card ws-soon">
+        <h4>다음 피드백 일정이 표시될 자리</h4>
+        <p>멤버가 되면 「다음 피드백 D-6」처럼, 함께 보는 날이 여기 뜹니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="consult">
+      <div class="ws-h1">1:1 컨설팅</div>
+      <div class="ws-sub">예약과 세션 기록이 남는 곳. 말은 흩어져도 기록은 남습니다.</div>
+      <div class="ws-card">
+        <h4>1회차 세션 노트 <span class="ws-ex">예시</span></h4>
+        <p>포지셔닝 확정 — «앞머리 전문» → 다음 세션까지: 대표 콘텐츠 3개 고정</p>
+      </div>
+      <div class="ws-card ws-soon">
+        <h4>소수만 받습니다</h4>
+        <p>계정 하나만 놓고 포지셔닝부터 상품 구조까지. 일정 협의 후 진행됩니다.</p>
+      </div>
+    </section>
+
+    <section class="ws-view" data-v="ask">
+      <div class="ws-h1">바로 묻기</div>
+      <div class="ws-sub">막히면 혼자 오래 잡고 있지 마세요. 그 시간이 가장 비쌉니다.</div>
+      <div class="ws-card">
+        <h4>연락 창구</h4>
+        <p style="margin-bottom:14px">지금은 이메일로, 곧 DM·오픈카톡으로 연결됩니다.</p>
+        <a class="btn btn-lime" style="font-size:13.5px;padding:12px 22px" href="mailto:isuseong454@gmail.com?subject=문의">✉️ 이메일 보내기</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- 상세 페이지 -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <button class="sheet-close" id="sheetClose" aria-label="닫기">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="sheet-inner" id="sheetBody"></div>
+</div>
+
+<script>
+/* ── 흐름 데이터 ─────────────────────────── */
+const FLOW = [
+  {
+    id:'scan', cat:'STEP 01 · 진단', name:'계정 판독', tag:'무료',
+    desc:'출발점을 먼저 찍습니다. 지금 계정의 문제가 소재인지, 후킹인지, 전환인지 — 처방 한 장으로.',
+    tags:['퍼널 진단','후킹 점검','처방 1장'],
+    lead:'대부분의 크리에이터는 <b>어디가 막혔는지 모른 채</b> 콘텐츠만 계속 만듭니다. 판독은 그 막힌 지점을 찾는 일입니다. 계정 링크 하나만 보내주시면, 소재·후킹·전환 중 어디서 새고 있는지 기준에 따라 진단하고 처방을 드립니다.',
+    feats:[
+      ['무엇을 보나','첫 화면에서 멈추게 하는가(후킹), 끝까지 보게 하는가(구조), 프로필로 오게 하는가(전환) — 세 관문을 순서대로 봅니다.'],
+      ['무엇을 받나','막힌 관문 하나와, 이번 주에 바꿀 것 한 가지가 적힌 처방. 길게 쓰지 않습니다. 실행할 수 있는 만큼만.'],
+      ['왜 무료인가','눈이 맞는지 확인하는 단계이기 때문입니다. 판독이 유용했다면, 그다음을 함께 가면 됩니다.']
+    ],
+    cta:['무료 판독 신청','mailto:isuseong454@gmail.com?subject=무료 계정 판독 신청&body=계정 링크: ']
+  },
+  {
+    id:'idea', cat:'STEP 02 · 소재', name:'아이디어 폴더', tag:'앱',
+    desc:'스치는 생각을 잃어버리지 않게. 떠오른 순간 담고, 릴스는 원고로 풀어서 소재 창고를 만듭니다.',
+    tags:['아이디어 수집','릴스 → 원고','소재 창고'],
+    lead:'좋은 콘텐츠는 책상 앞에서 나오지 않습니다. 길에서, 손님 앞에서, 밤에 스칩니다. <b>담는 장치가 없으면 소재는 증발합니다.</b> 아이디어 폴더는 떠오른 순간 한 줄로 담고, 참고하고 싶은 릴스는 음성까지 원고로 풀어 소재 창고에 쌓는 도구입니다.',
+    feats:[
+      ['한 줄 담기','떠오른 순간 앱을 열고 한 줄. 분류는 나중에 해도 됩니다. 잃어버리지 않는 것이 먼저입니다.'],
+      ['폴더 소재 창고','담은 조각이 주제별 폴더로 정리됩니다. 올릴 때가 되면 창고에서 꺼내 쓰기만 하면 됩니다.'],
+      ['릴스 → 원고','잘 터진 릴스를 넣으면 말한 내용이 통째로 글이 됩니다. 내 컴퓨터에서 돌아가는 AI라 비용도 0원.'],
+      ['제작의 연료','쌓인 소재는 다음 단계(제작·훈련)로 바로 이어집니다. 소재 고갈이 사라집니다.']
+    ],
+    cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=아이디어 폴더 문의']
+  },
+  {
+    id:'masters', cat:'STEP 03 · 제작 · 훈련', name:'컨텐츠 마스터즈', tag:'핵심 앱',
+    desc:'벤치마킹을 분해하고, 원고를 훈련하고, 기준으로 판독합니다. 보는 눈을 기르는 훈련장.',
+    tags:['벤치마킹 분해','원고 트레이닝','판독 기준','후킹 100'],
+    lead:'감으로 만들면 감으로 무너집니다. 컨텐츠 마스터즈는 <b>잘 되는 콘텐츠를 기준으로 분해하고, 내 원고를 같은 기준으로 훈련하는</b> 앱입니다. 후킹·구조·전환 — 조회수를 만드는 요소를 눈이 아니라 기준으로 다루게 됩니다.',
+    feats:[
+      ['벤치마킹 시트','잘 되는 콘텐츠를 링크로 담으면 한 줄씩 쌓입니다. 내 분야의 «잘 되는 이유» 데이터베이스가 됩니다.'],
+      ['AI 분해','담은 콘텐츠가 후킹·구조·타겟으로 쪼개집니다. "왜 잘 됐는지"가 감상이 아니라 문장으로 남습니다.'],
+      ['트레이닝룸','3초 후킹 판별, 썸네일 대진 같은 훈련으로 보는 눈을 기릅니다. 하루 5분이면 충분합니다.'],
+      ['원고 손질 방','쓴 원고를 펜으로 쓸어 칠하며 다듬습니다. 첫 문장부터 마지막 전환까지, 기준에 대고.'],
+      ['고객의 방','내 고객의 문제·욕구·회피·저항을 네 바구니에 모읍니다. 콘텐츠가 겨냥할 과녁이 생깁니다.']
+    ],
+    cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=컨텐츠 마스터즈 문의']
+  },
+  {
+    id:'carousel', cat:'STEP 04 · 비주얼', name:'캐러셀 공장', tag:'앱',
+    desc:'원고를 넣으면 피드용 캐러셀이 나옵니다. 디자이너 없이, 일관된 톤으로.',
+    tags:['1080×1350','표지 + 상세','일관된 톤'],
+    lead:'글이 좋아도 옷이 없으면 피드에서 죽습니다. 캐러셀 공장은 <b>원고를 넣으면 표지와 상세 장이 완성된 캐러셀로</b> 나오는 도구입니다. 매번 디자인을 고민하지 않아도, 계정 전체가 한 톤으로 유지됩니다.',
+    feats:[
+      ['표지 짜임','첫 장은 멈추게 하는 표지 구조가 미리 설계되어 있습니다. 문구만 바꿔 끼우면 됩니다.'],
+      ['상세 짜임','뒷장은 읽게 하는 본문 구조. 글의 리듬에 맞춰 장이 나뉩니다.'],
+      ['한 벌의 옷','색·서체·여백이 고정되어 계정 전체가 한 톤으로. 피드가 쌓일수록 브랜드처럼 보입니다.'],
+      ['인스타 규격 그대로','1080×1350으로 바로 내보내 업로드만 하면 끝. 디자인 툴이 필요 없습니다.']
+    ],
+    cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=캐러셀 공장 문의']
+  },
+  {
+    id:'hub', cat:'STEP 05 · 전환', name:'컨텐츠 허브', tag:'앱',
+    desc:'프로필에 온 사람을 고객으로. 링크 하나에 전문성과 상품이 정리된 나만의 홈.',
+    tags:['링크인바이오','전문성 가시화','예약 · 상품'],
+    lead:'조회수가 아무리 나와도 프로필 링크가 허술하면 수익은 새어 나갑니다. 컨텐츠 허브는 <b>프로필에 온 사람이 당신의 전문성을 30초 안에 믿게 만드는</b> 한 페이지입니다. 링크 하나로 강의·상품·예약이 정리됩니다.',
+    feats:[
+      ['한 페이지 홈','링크 하나에 소개·대표 콘텐츠·상품·예약이 정리됩니다. 프로필에 온 사람이 30초 안에 믿게.'],
+      ['전문성 가시화','이력·후기·사례가 구조로 보입니다. "이 사람 뭐 하는 사람이지?"가 사라집니다.'],
+      ['전환 동선 설계','보고 → 믿고 → 문의하기까지의 동선이 한 화면 안에 설계되어 있습니다.'],
+      ['내 손으로 수정','편집 화면에서 언제든 내용과 순서를 바꿉니다. 외주 없이, 그 자리에서.']
+    ],
+    cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=컨텐츠 허브 문의']
+  },
+  {
+    id:'dm', cat:'STEP 06 · 소통 · 판매', name:'DM 비서', tag:'앱',
+    desc:'댓글과 DM에 자동으로 응답합니다. 문의를 놓치지 않는 것이 곧 매출입니다.',
+    tags:['인스타 연동','자동 응답','문의 → 판매'],
+    lead:'문의는 콘텐츠가 잘 될 때 몰려오고, 그때 당신은 가장 바쁩니다. DM 비서는 <b>인스타그램과 연동해 댓글·DM에 자동으로 응답하는</b> 도구입니다. 놓친 문의 하나가 놓친 고객 한 명입니다.',
+    feats:[
+      ['인스타 공식 연동','Meta 공식 API 방식으로 계정을 연결합니다. 비밀번호를 맡기는 위험한 방식이 아닙니다.'],
+      ['키워드 자동 응답','"가격", "예약" 같은 키워드에 준비된 답이 바로 나갑니다. 새벽 문의도 놓치지 않습니다.'],
+      ['댓글 → DM 연결','댓글 단 사람에게 DM으로 링크를 보내는 흐름을 자동화합니다. 참여가 전환이 됩니다.'],
+      ['판매로 이어짐','응답 끝에는 허브·상품 링크가 붙습니다. 소통이 그대로 매출 동선이 됩니다.']
+    ],
+    cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=DM 비서 문의']
+  }
+];
+
+/* ── 앱 아이콘 = 진짜 앱 아이콘 파일 (img/) ── */
+const ICONS = {
+  scan:'img/app-scan.png',      /* 서브로고 시트 · 전략 컨설팅(조준경) */
+  idea:'img/app-idea.png',      /* 아이디어 폴더 실제 아이콘 */
+  masters:'img/app-masters.png',/* 컨텐츠 마스터즈 PWA 아이콘 */
+  carousel:'img/app-carousel.png',
+  hub:'img/app-hub.png',
+  dm:'img/app-dm.png'
+};
+const icImg = id => ICONS[id] ? `<img src="${ICONS[id]}" alt="">` : '';
+
+/* ── 상세 페이지 보강 데이터 (막힘 → 전후 → 진행) ── */
+const EXTRA = {
+  scan:{
+    pain:['열심히 올리는데, 왜 반응이 없는 걸까?','문제를 모른 채 콘텐츠만 쌓이는 상태 — 가장 흔하고, 가장 오래 갇히는 구간입니다.'],
+    before:'감으로 올리고, 조회수에 일희일비. 뭘 고쳐야 할지 몰라 전부를 의심함.',
+    after:'막힌 관문 하나를 알고 있음. 이번 주에 바꿀 것이 한 가지로 좁혀짐.',
+    how:[['계정 링크를 보냅니다','인스타그램 프로필 주소 하나면 됩니다. 준비물 없음.'],
+         ['세 관문으로 판독합니다','멈추게 하는가(후킹) · 끝까지 보는가(구조) · 프로필로 오는가(전환).'],
+         ['처방 한 장을 받습니다','막힌 관문 하나 + 이번 주에 바꿀 것 하나. 실행할 수 있는 만큼만.']]
+  },
+  idea:{
+    pain:['오늘도 소재가 없어서 못 올렸다.','소재 고갈은 재능 문제가 아니라 «담는 장치»가 없는 문제입니다.'],
+    before:'스친 생각이 하루 만에 증발. 올릴 때가 되면 머리가 하얘짐.',
+    after:'꺼내 쓰기만 하면 되는 소재 창고. 잘 된 릴스는 원고째로 쌓여 있음.',
+    how:[['스치면 한 줄로 담습니다','길에서, 손님 앞에서, 밤에 — 떠오른 순간 앱을 열고 한 줄.'],
+         ['릴스는 원고로 풉니다','참고하고 싶은 릴스를 넣으면 말한 내용이 전부 글이 됩니다.'],
+         ['만들 때 꺼냅니다','쌓인 소재가 다음 단계(제작·훈련)의 연료가 됩니다.']]
+  },
+  masters:{
+    pain:['잘 되는 사람 걸 봐도, 뭐가 다른지 모르겠다.','보는 눈이 없으면 벤치마킹은 그냥 구경입니다.'],
+    before:'감으로 만들고 감으로 무너짐. 잘 돼도 왜 잘 됐는지 모름.',
+    after:'후킹·구조·전환을 기준으로 다룸. 잘 된 이유가 문장으로 남음.',
+    how:[['잘 되는 콘텐츠를 담습니다','내 분야에서 터진 콘텐츠를 앱에 수집합니다.'],
+         ['기준으로 분해합니다','후킹·구조·타겟으로 쪼개져 «왜 잘 됐는지»가 남습니다.'],
+         ['내 원고를 훈련합니다','같은 기준에 내 원고를 대고 다듬는 트레이닝 방이 있습니다.']]
+  },
+  carousel:{
+    pain:['내용은 좋은데, 피드에서 안 눌린다.','글이 좋아도 옷이 없으면 스쳐 지나갑니다.'],
+    before:'장마다 디자인 고민. 올릴 때마다 톤이 들쭉날쭉.',
+    after:'원고만 넣으면 한 톤의 캐러셀. 피드가 쌓일수록 브랜드처럼 보임.',
+    how:[['원고를 붙여넣습니다','이미 쓴 글이면 됩니다. 디자인 지식 불필요.'],
+         ['짜임을 고릅니다','멈추게 하는 표지 짜임 + 읽게 하는 상세 짜임.'],
+         ['그대로 내보냅니다','1080×1350, 인스타그램에 바로 올리는 규격.']]
+  },
+  hub:{
+    pain:['프로필까지 왔는데, 링크에서 다 새어 나간다.','조회수의 마지막 1미터 — 여기가 뚫려 있으면 앞의 전부가 헛돕니다.'],
+    before:'링크 하나 덜렁. 들어와도 뭐 하는 사람인지 모르고 나감.',
+    after:'30초 안에 전문성이 보이는 한 페이지. 문의 동선이 한 줄로 이어짐.',
+    how:[['보여줄 것을 정리합니다','대표 콘텐츠 · 이력 · 상품을 구조에 채워 넣습니다.'],
+         ['동선을 배치합니다','보고 → 믿고 → 문의하기까지 한 화면 안에서 끝나게.'],
+         ['프로필에 겁니다','링크 하나로 교체. 수정은 언제든 내 손으로.']]
+  },
+  dm:{
+    pain:['문의가 몰려올 땐, 내가 제일 바쁠 때다.','답하다 하루가 끝나거나, 놓쳐서 고객이 식거나. 둘 다 손해입니다.'],
+    before:'새벽 문의 놓침. 같은 답을 하루에 수십 번 복사·붙여넣기.',
+    after:'키워드에 자동 응답. 소통이 그대로 매출 동선이 됨.',
+    how:[['인스타그램을 연결합니다','Meta 공식 API 방식으로 계정을 안전하게 연동.'],
+         ['키워드와 답을 등록합니다','"가격" "예약" 같은 말에 준비된 답이 바로 나갑니다.'],
+         ['흐름이 자동으로 돕니다','댓글 → DM → 허브·상품 링크까지 이어지는 판매 동선.']]
+  }
+};
+
+/* ── 상세 히어로 + 기능별 데모 목업 ─────────── */
+const DEMOS = {
+  scan:{
+    hero:`<div class="pad">
+      <div class="mk-t">판독 리포트 — @your_account</div>
+      <div class="gate">① 후킹 — 스크롤을 멈추게 하는가 <span class="st">통과</span></div>
+      <div class="gate">② 구조 — 끝까지 보게 하는가 <span class="st">통과</span></div>
+      <div class="gate stuck">③ 전환 — 프로필로 오게 하는가 <span class="st">← 여기가 막힘</span></div>
+      <div class="rx">처방 · 프로필 첫 줄을 «누구를 위한 계정인지»가 보이게 바꾸세요. 이번 주는 이것 하나만.</div>
+    </div>`,
+    demos:[
+      `<div class="mk"><span class="chip on">후킹</span><span class="fl-ar">→</span><span class="chip on">구조</span><span class="fl-ar">→</span><span class="chip on">전환</span><div class="mk-cap">세 관문을 순서대로 — 앞이 뚫려야 뒤가 의미 있습니다</div></div>`,
+      null, null]
+  },
+  idea:{
+    hero:`<img src="img/hero-idea.jpg" alt="아이디어 폴더">`,
+    demos:[
+      `<div class="mk"><div class="bub me">머리 감겨줄 때 손님이 꼭 물어보는 그 질문 → 소재감</div><span class="chip on">+ 담김</span><span class="chip">창고에 47개</span></div>`,
+      null,
+      `<div class="mk"><span class="chip">🎬 잘 터진 릴스</span><span class="fl-ar">→</span><span class="chip on">✎ 원고 전문</span><div style="margin-top:10px" class="skl"></div><div class="skl dim" style="margin-top:6px;width:72%"></div></div>`,
+      null]
+  },
+  masters:{
+    hero:`<img src="img/hero-masters.jpg" alt="컨텐츠 마스터즈">`,
+    demos:[
+      `<img class="shotimg" src="img/shot-masters-sheet.jpg" alt="벤치마킹 시트 실제 화면">`,
+      `<img class="shotimg" src="img/shot-masters-row.jpg" alt="분해된 콘텐츠 — 조회수 124만">`,
+      `<img class="shotimg" src="img/shot-masters-training.jpg" alt="트레이닝 룸 실제 화면">`,
+      `<div class="mk" style="font-size:13px;line-height:1.9;color:var(--sub)">첫 문장 훈련 · <b style="color:var(--lime);border-bottom:1px solid rgba(200,241,105,.5)">"아직도 아침마다 이러세요?"</b><span class="mk-cap" style="display:block;text-align:left;margin-top:6px">설명형 → 질문형 후킹으로 교정</span></div>`,
+      `<img class="shotimg" src="img/shot-masters-customer.jpg" alt="고객의 방 — 수배지">`]
+  },
+  carousel:{
+    hero:`<img src="img/shot-carousel.jpg" alt="캐러셀 공장 실제 편집기 — 1080×1350 표지형">`,
+    demos:[null, null,
+      `<div class="mk"><div class="ccards" style="padding:6px 0"><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div></div><div class="mk-cap">색·서체·여백 고정 — 피드가 쌓일수록 브랜드처럼</div></div>`,
+      null]
+  },
+  hub:{
+    hero:`<img src="img/hero-hub.jpg" alt="컨텐츠 허브">`,
+    demos:[
+      `<div class="mk"><div class="pfrow"><div class="av"></div><div style="flex:1"><div class="skl" style="width:45%"></div><div class="skl dim" style="margin-top:6px;width:70%"></div></div></div><span class="chip on">대표 콘텐츠</span><span class="chip">이력</span><span class="chip">후기</span><span class="chip">예약</span></div>`,
+      null,
+      `<div class="mk"><span class="chip">보고</span><span class="fl-ar">→</span><span class="chip">믿고</span><span class="fl-ar">→</span><span class="chip on">문의하기</span><div class="mk-cap">한 화면 안에서 끝나는 전환 동선</div></div>`,
+      null]
+  },
+  dm:{
+    hero:`<img src="img/hero-dm.jpg" alt="DM 비서">`,
+    demos:[
+      null,
+      `<div class="mk"><div class="bub"><span class="who">고객 · 새벽 2:14</span>가격이 어떻게 되나요?</div><div class="bub me"><span class="who">DM 비서 · 자동응답 3초</span>안녕하세요! 시술별 안내를 바로 보내드릴게요 → 링크</div></div>`,
+      `<div class="mk"><span class="chip">💬 댓글 "정보 주세요"</span><span class="fl-ar">→</span><span class="chip">DM 자동 발송</span><span class="fl-ar">→</span><span class="chip on">허브 · 상품 링크</span></div>`,
+      null]
+  }
+};
+
+/* ── 마퀴 이음새 없는 루프(두 벌 복제) ───────── */
+const mq = document.getElementById('mqTrack');
+mq.innerHTML += mq.innerHTML; /* 2벌 */
+mq.innerHTML += mq.innerHTML; /* 4벌 — 반 폭이 화면보다 넓어야 이음새가 없다 */
+
+/* ── 흐름 카드 렌더 ─────────────────────────── */
+const flowList = document.getElementById('flowList');
+flowList.innerHTML = FLOW.map((f,i)=>`
+  <div class="step rv" data-id="${f.id}" role="button" tabindex="0" aria-label="${f.name} 자세히 보기">
+    <div class="node">${String(i+1).padStart(2,'0')}</div>
+    <div class="card">
+      <div class="appic">${icImg(f.id)}</div>
+      <div class="ctxt">
+        <div class="cat">${f.cat}</div>
+        <h3>${f.name} <span class="tag">${f.tag}</span></h3>
+        <p>${f.desc}</p>
+      </div>
+      <div class="go"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+    </div>
+  </div>`).join('');
+
+/* ── 상세 페이지 ─────────────────────────── */
+const sheet = document.getElementById('sheet');
+const sheetBody = document.getElementById('sheetBody');
+let lastScroll = 0;
+function openSheet(id){
+  const f = FLOW.find(x=>x.id===id); if(!f) return;
+  const ex = EXTRA[f.id];
+  const dm = DEMOS[f.id] || {};
+  sheetBody.innerHTML = `
+    <div class="sheet-ic">${icImg(f.id)}</div>
+    <div class="cat">${f.cat}</div>
+    <h2>${f.name}</h2>
+    <div class="tag-row">${f.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+    ${dm.hero?`<div class="sheet-hero">${dm.hero}</div>`:''}
+    ${ex?`
+    <div class="pain">${ex.pain[0]}<small>${ex.pain[1]}</small></div>
+    <div class="ba">
+      <div class="b"><span class="k">BEFORE</span>${ex.before}</div>
+      <div class="arr"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
+      <div class="a"><span class="k">AFTER</span>${ex.after}</div>
+    </div>`:''}
+    <p class="lead">${f.lead}</p>
+    <div class="sh-lab">WHAT YOU GET</div>
+    <div class="feats">${f.feats.map((x,i)=>`<div class="feat"><h4>${x[0]}</h4><p>${x[1]}</p>${(dm.demos&&dm.demos[i])||''}</div>`).join('')}</div>
+    ${ex?`
+    <div class="sh-lab">HOW IT WORKS</div>
+    <div class="how">${ex.how.map((x,i)=>`<div class="row"><div class="n">${i+1}</div><p><b>${x[0]}</b> — ${x[1]}</p></div>`).join('')}</div>`:''}
+    <div class="sheet-cta">
+      <a class="btn btn-lime" href="${f.cta[1]}">${f.cta[0]}</a>
+      <button class="btn btn-ghost" data-close>목록으로</button>
+    </div>`;
+  lastScroll = window.scrollY;
+  sheet.classList.add('open');
+  sheet.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(){
+  sheet.classList.remove('open');
+  document.body.style.overflow = '';
+}
+flowList.addEventListener('click', e=>{
+  const s = e.target.closest('.step'); if(s) openSheet(s.dataset.id);
+});
+flowList.addEventListener('keydown', e=>{
+  if(e.key==='Enter'||e.key===' '){ const s=e.target.closest('.step'); if(s){e.preventDefault();openSheet(s.dataset.id);} }
+});
+document.getElementById('sheetClose').addEventListener('click', closeSheet);
+sheet.addEventListener('click', e=>{ if(e.target.dataset.close!==undefined && e.target.hasAttribute('data-close')) closeSheet(); });
+window.addEventListener('keydown', e=>{ if(e.key==='Escape' && sheet.classList.contains('open')) closeSheet(); });
+
+/* ── 별 생성 (가벼움 우선: 24개만, 화면 밖이면 멈춤) ── */
+const sky = document.getElementById('sky');
+const frag = document.createDocumentFragment();
+for(let i=0;i<24;i++){
+  const s = document.createElement('div');
+  s.className = 'star' + (i%3===0 ? ' tw' : '');
+  const sz = i%4===0 ? 2 : 1;
+  s.style.cssText = `left:${(i*137.5)%100}%;top:${(i*61.8)%100}%;width:${sz}px;height:${sz}px;animation-delay:${(i*.47)%3.6}s`;
+  frag.appendChild(s);
+}
+sky.appendChild(frag);
+
+/* ── 마우스 광원 (데스크톱만) ─────────────── */
+if(matchMedia('(pointer:fine)').matches){
+  let raf = 0;
+  window.addEventListener('mousemove', e=>{
+    if(raf) return;
+    raf = requestAnimationFrame(()=>{
+      document.documentElement.style.setProperty('--gx', e.clientX+'px');
+      document.documentElement.style.setProperty('--gy', e.clientY+'px');
+      document.body.classList.add('glow-on');
+      raf = 0;
+    });
+  });
+  /* 카드 테두리 빛 좌표 */
+  document.addEventListener('mousemove', e=>{
+    const c = e.target.closest && e.target.closest('.step .card');
+    if(!c) return;
+    const r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', (e.clientX-r.left)+'px');
+    c.style.setProperty('--my', (e.clientY-r.top)+'px');
+  }, {passive:true});
+}
+
+/* ── 등장 리빌 ─────────────────────────── */
+const io = new IntersectionObserver(es=>{
+  es.forEach(x=>{ if(x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } });
+},{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ── 숫자 카운트업 ─────────────────────────── */
+const cio = new IntersectionObserver(es=>{
+  es.forEach(x=>{
+    if(!x.isIntersecting) return;
+    cio.unobserve(x.target);
+    const el = x.target, end = +el.dataset.count, t0 = performance.now(), dur = 1100;
+    (function tick(t){
+      const p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(end*e) + (p===1?'+':'');
+      if(p<1) requestAnimationFrame(tick);
+    })(t0);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+/* ── 도크 활성 표시 + 이동 ─────────────────── */
+const dock = document.getElementById('dock');
+dock.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  const t = document.querySelector(b.dataset.go === '#top' ? 'body' : b.dataset.go);
+  if(b.dataset.go === '#top') window.scrollTo({top:0,behavior:'smooth'});
+  else if(t) t.scrollIntoView({behavior:'smooth'});
+});
+/* ── 로그인 게이트 + 워크스페이스 ─────────── */
+const gate = document.getElementById('loginGate');
+const ws = document.getElementById('ws');
+document.getElementById('loginBtn').addEventListener('click', ()=>{
+  gate.classList.add('on'); document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('gtCode').focus(), 350);
+});
+function closeGate(){ gate.classList.remove('on'); if(!ws.classList.contains('on')) document.body.style.overflow=''; }
+document.getElementById('gateClose').addEventListener('click', closeGate);
+
+const pins = [...document.querySelectorAll('.gt-pin')];
+pins.forEach((p,i)=>{
+  p.addEventListener('input', ()=>{ if(p.value && i<3) pins[i+1].focus(); });
+  p.addEventListener('keydown', e=>{ if(e.key==='Backspace' && !p.value && i>0) pins[i-1].focus(); });
+});
+document.getElementById('gtEnter').addEventListener('click', ()=>{
+  const msg = document.getElementById('gtMsg');
+  msg.textContent = '아직 발급된 코드가 없어요 — 코드는 동행 시작 시 드립니다. 아래 미리보기로 둘러보세요.';
+  msg.classList.add('warn');
+  const card = document.getElementById('gateCard');
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+});
+document.getElementById('gtDemo').addEventListener('click', ()=>{
+  gate.classList.remove('on');
+  ws.classList.add('on');
+  document.body.style.overflow='hidden';
+});
+document.getElementById('wsClose').addEventListener('click', ()=>{
+  ws.classList.remove('on'); document.body.style.overflow='';
+});
+document.getElementById('wsSide').addEventListener('click', e=>{
+  const it = e.target.closest('.ws-it'); if(!it) return;
+  document.querySelectorAll('.ws-it').forEach(x=>x.classList.toggle('on', x===it));
+  document.querySelectorAll('.ws-view').forEach(v=>v.classList.toggle('on', v.dataset.v===it.dataset.v));
+  document.querySelector('.ws-main').scrollTop = 0;
+});
+window.addEventListener('keydown', e=>{
+  if(e.key!=='Escape') return;
+  if(gate.classList.contains('on')) closeGate();
+  else if(ws.classList.contains('on')){ ws.classList.remove('on'); document.body.style.overflow=''; }
+});
+
+const SECS = ['#flow','#products','#about'];
+const sio = new IntersectionObserver(es=>{
+  es.forEach(x=>{
+    if(!x.isIntersecting) return;
+    const id = '#'+x.target.id;
+    dock.querySelectorAll('button[data-go]').forEach(b=>{
+      if(b.classList.contains('dk-cta')) return;
+      b.classList.toggle('on', b.dataset.go===id || (id==='#how' && b.dataset.go==='#top'));
+    });
+  });
+},{rootMargin:'-40% 0px -50% 0px'});
+['how','flow','products','about'].forEach(id=>{
+  const el = document.getElementById(id); if(el) sio.observe(el);
+});
+</script>
+</body>
+</html>
