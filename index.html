@@ -48,13 +48,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ── 우주 배경 ─────────────────────────── */
 .sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.sky::before{ /* 성운 */
-  content:"";position:absolute;inset:-20%;
-  background:
-    radial-gradient(42% 30% at 78% 6%, rgba(200,241,105,.055), transparent 62%),
-    radial-gradient(50% 38% at 12% 30%, rgba(94,118,255,.06), transparent 60%),
-    radial-gradient(45% 32% at 60% 88%, rgba(160,120,255,.045), transparent 60%);
-}
+/* (제거됨) 색 성운 — 사장님 요청. 순수한 검은 우주 + 별·먼지만 남긴다 */
 .sky::after{ /* 미세 입자 */
   content:"";position:absolute;inset:0;
   background-image:
@@ -70,6 +64,21 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.35}
 .star.tw{animation:tw 3.6s ease-in-out infinite}
 @keyframes tw{0%,100%{opacity:.15}50%{opacity:.7}}
+
+/* 부유 먼지 + 유성 — 전체 화면(무중력) */
+.dust{position:absolute;border-radius:50%;background:#fff;opacity:0;
+  animation:skyFloat linear infinite;will-change:transform,opacity}
+@keyframes skyFloat{
+  0%{transform:translateY(30px) translateX(0);opacity:0}
+  12%{opacity:.5}
+  88%{opacity:.36}
+  100%{transform:translateY(-110vh) translateX(40px);opacity:0}}
+/* (제거됨) 유성 — 오른쪽 위에서 왼쪽 아래로 떨어지는 것, 사장님 요청 */
+
+/* 히어로 워프 — 첫 화면에만, 아래로 갈수록 사라짐 */
+.warpbg{position:absolute;top:0;left:0;width:100%;height:100svh;z-index:0;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 48%,rgba(0,0,0,.4) 76%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 48%,rgba(0,0,0,.4) 76%,transparent 100%)}
 .glow-cursor{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .6s var(--ease);
   background:radial-gradient(520px 520px at var(--gx,50%) var(--gy,30%), rgba(200,241,105,.05), transparent 70%)}
 body.glow-on .glow-cursor{opacity:1}
@@ -91,20 +100,14 @@ body.glow-on .glow-cursor{opacity:1}
 /* ── 히어로 ─────────────────────────── */
 .hero{min-height:100svh;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:24px;padding-top:80px;padding-bottom:60px}
 .hero-vis{position:relative;display:grid;place-items:center;perspective:950px;min-height:380px}
-.hero-vis::before{content:"";position:absolute;inset:-90px;pointer-events:none;
-  background:radial-gradient(45% 45% at 50% 50%, rgba(200,241,105,.13), transparent 70%);
-  animation:hvBg 6s ease-in-out infinite}
-@keyframes hvBg{0%,100%{opacity:.55}50%{opacity:1}}
+/* (제거됨) 로고 뒤 «성운» 빛구름 — 사장님 요청. 로고 자체 글로우만 남긴다 */
 .hero-vis img{position:relative;width:min(330px,72%);
   filter:drop-shadow(0 0 26px rgba(200,241,105,.35));
   animation:hvBreathe 6s ease-in-out infinite;
   transition:transform .25s var(--ease);will-change:transform,filter}
 @keyframes hvBreathe{0%,100%{filter:drop-shadow(0 0 26px rgba(200,241,105,.35))}
   50%{filter:drop-shadow(0 0 58px rgba(200,241,105,.65))}}
-.hv-p{position:absolute;left:50%;top:50%;width:3px;height:3px;border-radius:50%;background:var(--lime);
-  opacity:0;animation:hvAbsorb 5s linear infinite;pointer-events:none}
-@keyframes hvAbsorb{0%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}
-  15%{opacity:.8}85%{opacity:.5}100%{transform:translate(0,0) scale(.2);opacity:0}}
+/* (제거됨) 로고로 빨려들던 입자 — 오른쪽 위→왼쪽 아래로 내려가는 게 이것. 사장님 요청 */
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.22em;
   color:var(--lime);margin-bottom:26px}
 .eyebrow::before{content:"";width:22px;height:1px;background:var(--lime);opacity:.7}
@@ -149,7 +152,8 @@ section{padding:110px 0}
 .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1;transform:none}
-  .marquee .track,.star.tw,.hero-hint .bar,.hero-vis::before,.hero-vis img,.hv-p{animation:none}
+  .marquee .track,.star.tw,.hero-hint .bar,.hero-vis img,.dust{animation:none}
+  .dust{display:none}
 }
 
 /* ── 가치 3카드 ─────────────────────────── */
@@ -259,7 +263,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
 .dock button.on{color:var(--lime);background:rgba(255,255,255,.08)}
 .dock button.on::after{content:"";position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
   width:4px;height:4px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime)}
-.dock .dk-cta{width:auto;padding:0 20px;background:var(--lime);color:#0B1203;font-weight:800;font-size:13.5px;height:44px;margin-left:4px}
+.dock .dk-cta{width:auto;padding:0 20px;background:var(--lime);color:#0B1203;font-weight:800;font-size:13.5px;height:44px;margin-left:4px;white-space:nowrap}
 .dock .dk-cta:hover{box-shadow:0 4px 22px rgba(200,241,105,.4)}
 
 /* ── 상세 페이지 오버레이 ─────────────────────────── */
@@ -467,8 +471,6 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
   .hero{grid-template-columns:1fr;gap:0;padding-top:66px;padding-bottom:40px}
   .hero-vis{order:-1;min-height:168px;margin-top:2px}
   .hero-vis img{width:150px}
-  .hero-vis::before{inset:-50px}
-  .hv-p{display:none}
   .hero .sub{margin-top:18px}
   .hero .cta-row{margin-top:26px}
   .hero-hint{margin-top:30px}
@@ -507,6 +509,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
 <body>
 
 <div class="sky" id="sky"></div>
+<canvas class="warpbg" id="warpCv" aria-hidden="true"></canvas>
 <div class="glow-cursor"></div>
 
 <header class="topbar">
@@ -533,11 +536,6 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
       <div class="hero-hint"><span class="bar"></span>아래로 내리면, 수익까지의 6단계</div>
     </div>
     <div class="hero-vis" id="heroVis">
-      <span class="hv-p" style="--dx:-190px;--dy:-120px;animation-delay:0s"></span>
-      <span class="hv-p" style="--dx:200px;--dy:-90px;animation-delay:-1.2s"></span>
-      <span class="hv-p" style="--dx:170px;--dy:140px;animation-delay:-2.4s"></span>
-      <span class="hv-p" style="--dx:-160px;--dy:150px;animation-delay:-3.4s"></span>
-      <span class="hv-p" style="--dx:30px;--dy:-200px;animation-delay:-4.2s"></span>
       <img src="img/logo-glyph.png" alt="크리에이터 유틸리티" id="heroLogo">
     </div>
   </section>
@@ -1119,6 +1117,84 @@ for(let i=0;i<24;i++){
   frag.appendChild(s);
 }
 sky.appendChild(frag);
+
+/* ── 부유 먼지 + 유성 (전체 화면·무중력) ───────── */
+(()=>{
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const phone = innerWidth < 720;
+  const N = phone ? 16 : 30;              /* 폰은 절반 — 배터리 */
+  const f = document.createDocumentFragment();
+  for(let i=0;i<N;i++){
+    const d = document.createElement('span');
+    d.className = 'dust';
+    const sz = (i%5===0) ? 2.5 : 1.5;
+    d.style.cssText = `left:${(i*137.5)%100}%;bottom:-12px;width:${sz}px;height:${sz}px;`
+      + `animation-duration:${16+(i%7)*4}s;animation-delay:${-((i*1.7)%22)}s;`
+      + `background:${i%6===0 ? '#C8F169' : '#fff'}`;
+    f.appendChild(d);
+  }
+  sky.appendChild(f);
+})();
+
+/* ── 히어로 워프 (첫 화면만·보일 때만 그림 = 발열 헌법) ── */
+(()=>{
+  const cv = document.getElementById('warpCv');
+  if(!cv) return;
+  const ctx = cv.getContext('2d');
+  const REDUCE = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  let w=0, h=0, stars=[], raf=0, live=false;
+
+  function size(){
+    /* ⚠️ 판이 접혀 있으면 clientWidth가 0 — 뷰포트로 보정 */
+    w = cv.clientWidth || innerWidth;
+    h = cv.clientHeight || innerHeight;
+    cv.width = Math.max(1, w*dpr); cv.height = Math.max(1, h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  /* ⚠️ 꼬리를 길게 하면 «긴 선»이 날아다녀 시안과 달라진다.
+     정지 스크린샷으로 «약하다»고 판단하지 말 것 — 움직이면 충분히 보인다. */
+  const SP = 1.0;    /* 나아가는 속도 */
+  const TRAIL = 1;   /* 꼬리 길이 — 첫 시안과 동일(점에 가깝게) */
+  function seed(){
+    stars = [];
+    const n = Math.round(Math.min(innerWidth<720 ? 90 : 170, (w*h)/7000));
+    for(let i=0;i<n;i++) stars.push({x:(Math.random()-.5)*w, y:(Math.random()-.5)*h, z:Math.random()*w});
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);              /* 투명 — 뒤의 별·먼지가 비쳐 보인다 */
+    const cx=w/2, cy=h/2;
+    ctx.lineCap='round';
+    for(const s of stars){
+      s.z -= SP;
+      if(s.z < 1){ s.z = w; s.x=(Math.random()-.5)*w; s.y=(Math.random()-.5)*h; }
+      const k = 128/s.z, x = cx+s.x*k, y = cy+s.y*k;
+      if(x<-60||x>w+60||y<-60||y>h+60) continue;
+      const pk = 128/Math.min(w, s.z + SP*TRAIL), px = cx+s.x*pk, py = cy+s.y*pk;
+      const t = 1 - s.z/w;                /* 0=멀다 1=가깝다 */
+      /* ⚠️ 왼쪽 페이드 금지 — 별이 로고 쪽에만 남아 «로고로 날아드는» 모양이 된다.
+         첫 시안처럼 화면 전체에 고르게. */
+      const a = Math.min(1, t*1.2) * 0.75;
+      ctx.strokeStyle = `rgba(230,245,205,${a.toFixed(3)})`;
+      ctx.lineWidth = Math.max(.4, t*1.7);
+      ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(x,y); ctx.stroke();
+    }
+    if(live) raf = requestAnimationFrame(draw);
+  }
+  function start(){
+    if(live || REDUCE) return;
+    if(cv.clientWidth && Math.abs(cv.clientWidth-w) > 2){ size(); seed(); }
+    live = true; raf = requestAnimationFrame(draw);
+  }
+  function stop(){ live=false; if(raf) cancelAnimationFrame(raf); raf=0; }
+
+  size(); seed();
+  if(REDUCE){ draw(); return; }           /* 모션 끄기: 한 장만 그리고 정지 */
+  addEventListener('resize', ()=>{ size(); seed(); }, {passive:true});
+  new IntersectionObserver(es=>{ es[0].isIntersecting ? start() : stop(); }, {threshold:.02})
+    .observe(document.querySelector('.hero'));
+  addEventListener('visibilitychange', ()=>{ if(document.hidden) stop(); });
+})();
 
 /* ── 히어로 로고: 마우스 따라 기울기 (데스크톱만) ── */
 if(matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion:reduce)').matches){
