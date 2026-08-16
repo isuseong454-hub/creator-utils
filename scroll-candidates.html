@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>크유 스크롤 모션 시안 A~E</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#050609;--lime:#C8F169;--lime-deep:#9FD630;--text:#F2F4EE;--sub:#98A1AC;--mute:#5C6570;
+  --panel:rgba(255,255,255,.045);--line:rgba(255,255,255,.10);
+  --ease:cubic-bezier(.22,.9,.24,1);--spring:cubic-bezier(.32,1.25,.32,1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:"Pretendard Variable",Pretendard,-apple-system,"Noto Sans KR",sans-serif;letter-spacing:-.01em;overflow-x:clip}
+
+/* 진행 막대 */
+.prog{position:fixed;top:0;left:0;height:2px;width:0;z-index:99;
+  background:linear-gradient(90deg,var(--lime-deep),var(--lime));box-shadow:0 0 12px rgba(200,241,105,.6)}
+.tag{position:fixed;top:14px;left:14px;z-index:99;font-size:11.5px;font-weight:800;letter-spacing:.12em;
+  padding:8px 14px;border-radius:99px;background:rgba(10,12,16,.82);color:var(--lime);
+  border:1px solid rgba(200,241,105,.3);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+
+/* 배경 별 (시안 C에서 시차로 움직임) */
+.sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.slayer{position:absolute;inset:-30% 0;background-repeat:repeat;will-change:transform}
+.sfar{background-image:radial-gradient(1px 1px at 20px 30px,rgba(255,255,255,.32),transparent),
+  radial-gradient(1px 1px at 120px 90px,rgba(255,255,255,.24),transparent);background-size:220px 220px}
+.smid{background-image:radial-gradient(1.5px 1.5px at 60px 80px,rgba(255,255,255,.42),transparent),
+  radial-gradient(1.5px 1.5px at 220px 170px,rgba(200,241,105,.34),transparent);background-size:340px 340px}
+.snear{background-image:radial-gradient(2.5px 2.5px at 140px 110px,rgba(255,255,255,.6),transparent),
+  radial-gradient(2px 2px at 380px 300px,rgba(200,241,105,.48),transparent);background-size:520px 520px}
+
+.sec{position:relative;z-index:1;min-height:100vh;display:grid;place-items:center;padding:110px 26px}
+.in{width:100%;max-width:1000px}
+.abc{position:absolute;top:22px;right:26px;text-align:right;font-size:38px;font-weight:900;
+  color:rgba(255,255,255,.13);letter-spacing:-.03em;line-height:1}
+.abc b{display:block;color:var(--lime);font-size:13px;letter-spacing:.1em;margin-bottom:4px}
+.abc i{display:block;font-style:normal;color:var(--mute);font-size:11.5px;font-weight:700;letter-spacing:0;margin-top:8px}
+.eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.22em;color:var(--lime);margin-bottom:12px}
+h2{font-size:clamp(28px,4.6vw,44px);font-weight:900;letter-spacing:-.04em;line-height:1.14;margin-bottom:14px}
+.lead{font-size:14.5px;line-height:1.75;color:var(--sub);max-width:520px;word-break:keep-all;margin-bottom:34px}
+.card{border-radius:20px;padding:24px;background:var(--panel);border:1px solid var(--line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
+.card h4{font-size:16px;font-weight:800;margin-bottom:8px}
+.card p{font-size:13.5px;line-height:1.7;color:var(--sub);word-break:keep-all}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── A. 순차 등장 (Stagger) ─────────── */
+.stg{opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.stg.on{opacity:1;transform:none}
+
+/* ── B. 좌우 교차 슬라이드 ─────────── */
+.slideL,.slideR{opacity:0;transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.slideL{transform:translateX(-60px)} .slideR{transform:translateX(60px)}
+.slideL.on,.slideR.on{opacity:1;transform:none}
+.brow{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;margin-bottom:16px}
+@media(max-width:820px){.brow{grid-template-columns:1fr}}
+.bimg{height:150px;border-radius:20px;background:linear-gradient(135deg,rgba(200,241,105,.16),rgba(94,118,255,.10));
+  border:1px solid var(--line);display:grid;place-items:center;font-size:12px;color:var(--mute);font-weight:700}
+
+/* ── C. 시차 배경 (설명만) ─────────── */
+.depth{display:flex;gap:10px;flex-wrap:wrap}
+.chip{padding:8px 14px;border-radius:99px;background:rgba(255,255,255,.05);border:1px solid var(--line);
+  font-size:12.5px;font-weight:700;color:var(--sub)}
+
+/* ── D. 스티키 핀 (6단계 고정 진행) ─────────── */
+.pinwrap{position:relative;height:420vh}
+.pin{position:sticky;top:0;height:100vh;display:grid;place-items:center}
+.pinin{width:100%;max-width:1000px;padding:0 26px}
+.steps{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+.st{display:grid;grid-template-columns:52px 1fr;gap:16px;align-items:center;
+  padding:16px 20px;border-radius:18px;background:var(--panel);border:1px solid var(--line);
+  opacity:.3;transform:scale(.985);transition:opacity .45s var(--ease),transform .45s var(--spring),border-color .45s}
+.st.act{opacity:1;transform:scale(1);border-color:rgba(200,241,105,.45);background:rgba(200,241,105,.06)}
+.st .n{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;
+  color:var(--mute);border:1px solid var(--line);transition:all .45s var(--ease)}
+.st.act .n{color:var(--lime);border-color:var(--lime);box-shadow:0 0 20px rgba(200,241,105,.35)}
+.st h4{font-size:16.5px;font-weight:800}
+.st p{font-size:13px;color:var(--sub);margin-top:3px}
+.pbar{height:3px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:18px}
+.pbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--lime-deep),var(--lime));
+  border-radius:99px;transition:width .2s linear}
+
+/* ── E. 숫자 카운트 + 선 그리기 ─────────── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.stat{border-radius:20px;padding:26px 18px;background:var(--panel);border:1px solid var(--line);text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
+.stat .num{font-size:clamp(30px,5vw,44px);font-weight:900;color:var(--lime);letter-spacing:-.04em}
+.stat .lab{font-size:12.5px;color:var(--sub);margin-top:6px}
+.drawline{width:100%;height:2px;background:rgba(255,255,255,.08);position:relative;border-radius:99px}
+.drawline i{position:absolute;left:0;top:0;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--lime-deep),var(--lime));transition:width 1.4s var(--ease)}
+.drawline.on i{width:100%}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="tag">스크롤 모션 시안 — 내리면서 A · B · C · D · E 비교</div>
+
+<div class="sky">
+  <div class="slayer sfar"  data-sp="0.06"></div>
+  <div class="slayer smid"  data-sp="0.14"></div>
+  <div class="slayer snear" data-sp="0.26"></div>
+</div>
+
+<!-- A -->
+<section class="sec">
+  <div class="abc"><b>시안 A</b>순차 등장<i>카드가 하나씩 차례로</i></div>
+  <div class="in">
+    <div class="eyebrow stg">HOW WE WORK</div>
+    <h2 class="stg">앱과 사람이,<br>같이 갑니다.</h2>
+    <p class="lead stg">셋이 동시에 뜨지 않고 <b style="color:var(--text)">0.12초 간격</b>으로 하나씩 올라옵니다. 눈이 순서대로 따라가게 됩니다.</p>
+    <div class="g3">
+      <div class="card stg"><h4>먼저 계정을 봐드립니다</h4><p>눈이 맞는지 확인하는 데 돈을 받지 않습니다.</p></div>
+      <div class="card stg"><h4>월 단위로 함께 갑니다</h4><p>가장 비싼 건 혼자 헤매는 시간입니다.</p></div>
+      <div class="card stg"><h4>반복 작업은 도구가</h4><p>직접 만들어 쓰는 도구가 손을 대신합니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- B -->
+<section class="sec">
+  <div class="abc"><b>시안 B</b>좌우 교차<i>글과 그림이 양쪽에서</i></div>
+  <div class="in">
+    <div class="eyebrow slideL">PROGRAMS</div>
+    <h2 class="slideL">양쪽에서<br>들어옵니다.</h2>
+    <p class="lead slideL">한 줄은 왼쪽에서, 한 줄은 오른쪽에서. 화면이 지루하지 않게 리듬이 생깁니다.</p>
+    <div class="brow">
+      <div class="card slideL"><h4>온라인 강의</h4><p>왼쪽에서 들어옵니다.</p></div>
+      <div class="bimg slideR">오른쪽에서 들어옵니다</div>
+    </div>
+    <div class="brow">
+      <div class="bimg slideL">왼쪽에서 들어옵니다</div>
+      <div class="card slideR"><h4>월 동행 멤버십</h4><p>오른쪽에서 들어옵니다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- C -->
+<section class="sec">
+  <div class="abc"><b>시안 C</b>배경 시차<i>내릴수록 별이 다르게 흐름</i></div>
+  <div class="in">
+    <div class="eyebrow stg">DEPTH</div>
+    <h2 class="stg">별이 세 겹으로<br>다르게 흐릅니다.</h2>
+    <p class="lead stg">지금 이 화면을 위아래로 굴려보세요. <b style="color:var(--text)">가까운 별은 빠르게, 먼 별은 느리게</b> 지나갑니다. 화면에 «깊이»가 생깁니다.</p>
+    <div class="depth">
+      <span class="chip stg">먼 별 — 아주 느리게</span>
+      <span class="chip stg">중간 별 — 보통</span>
+      <span class="chip stg">가까운 별 — 빠르게</span>
+    </div>
+  </div>
+</section>
+
+<!-- D -->
+<div class="pinwrap" id="pinwrap">
+  <div class="pin">
+    <div class="abc"><b>시안 D ★추천</b>고정 진행<i>화면이 멈추고 단계가 켜짐</i></div>
+    <div class="pinin">
+      <div class="eyebrow">MONETIZE FLOW</div>
+      <h2>수익까지의 6단계.</h2>
+      <p class="lead" style="margin-bottom:0">화면이 <b style="color:var(--text)">잠깐 멈춘 채</b>, 스크롤에 맞춰 단계가 하나씩 켜집니다. 애플 제품 페이지가 쓰는 방식입니다.</p>
+      <div class="pbar"><i id="pinbar"></i></div>
+      <div class="steps" id="pinsteps">
+        <div class="st"><div class="n">01</div><div><h4>계정 판독</h4><p>출발점을 먼저 찍습니다</p></div></div>
+        <div class="st"><div class="n">02</div><div><h4>아이디어 폴더</h4><p>소재를 잃어버리지 않게</p></div></div>
+        <div class="st"><div class="n">03</div><div><h4>컨텐츠 마스터즈</h4><p>보는 눈을 기릅니다</p></div></div>
+        <div class="st"><div class="n">04</div><div><h4>캐러셀 공장</h4><p>피드에서 눌리게</p></div></div>
+        <div class="st"><div class="n">05</div><div><h4>컨텐츠 허브</h4><p>프로필에서 안 새게</p></div></div>
+        <div class="st"><div class="n">06</div><div><h4>DM 비서</h4><p>문의를 놓치지 않게</p></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- E -->
+<section class="sec">
+  <div class="abc"><b>시안 E</b>숫자 세기 + 선 그리기<i>도착하면 숫자가 올라감</i></div>
+  <div class="in">
+    <div class="eyebrow stg">WHO</div>
+    <h2 class="stg">숫자가 올라가고,<br>선이 그어집니다.</h2>
+    <p class="lead stg">화면에 들어온 순간 숫자가 0부터 세어 올라가고, 아래 선이 왼쪽에서 오른쪽으로 그어집니다.</p>
+    <div class="stats">
+      <div class="stat stg"><div class="num" data-count="12">0</div><div class="lab">직접 만든 도구</div></div>
+      <div class="stat stg"><div class="num" data-count="6">0</div><div class="lab">수익화 단계</div></div>
+      <div class="stat stg"><div class="num" data-count="100">0</div><div class="lab">후킹 제목 자산</div></div>
+    </div>
+    <div class="drawline" id="dl"><i></i></div>
+  </div>
+</section>
+
+<section class="sec" style="min-height:60vh">
+  <div class="in" style="text-align:center">
+    <h2>어떤 걸 넣을까요?</h2>
+    <p class="lead" style="margin:0 auto">여러 개 골라도 됩니다 — 섹션마다 다른 걸 쓰면 «내릴 때마다 변하는» 느낌이 납니다.</p>
+  </div>
+</section>
+
+<script>
+const se = document.scrollingElement;
+const REDUCE = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* 진행 막대 + 배경 시차 */
+(()=>{
+  const bar = document.getElementById('prog');
+  const layers = [...document.querySelectorAll('.slayer')];
+  let raf = 0;
+  function tick(){
+    const y = se.scrollTop, max = se.scrollHeight - innerHeight;
+    bar.style.width = (max>0 ? (y/max*100) : 0) + '%';
+    if(!REDUCE) layers.forEach(l=>{ l.style.transform = `translateY(${(-y*+l.dataset.sp).toFixed(1)}px)`; });
+    raf = 0;
+  }
+  addEventListener('scroll', ()=>{ if(!raf) raf = requestAnimationFrame(tick); }, {passive:true});
+  tick();
+})();
+
+/* A·B·E 공통 — 화면에 들어오면 순차로 켬 */
+(()=>{
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const sec = e.target;
+      const kids = [...sec.querySelectorAll('.stg,.slideL,.slideR')];
+      kids.forEach((k,i)=> setTimeout(()=>k.classList.add('on'), i*120));
+      const dl = sec.querySelector('.drawline'); if(dl) setTimeout(()=>dl.classList.add('on'), 400);
+      sec.querySelectorAll('[data-count]').forEach(el=>{
+        const end = +el.dataset.count, t0 = performance.now(), dur = 1200;
+        (function tick(t){
+          const p = Math.min(1,(t-t0)/dur), e2 = 1-Math.pow(1-p,3);
+          el.textContent = Math.round(end*e2) + (p===1?'+':'');
+          if(p<1) requestAnimationFrame(tick);
+        })(t0);
+      });
+      io.unobserve(sec);
+    });
+  },{threshold:.18});
+  document.querySelectorAll('.sec').forEach(s=>io.observe(s));
+})();
+
+/* D — 스티키 핀: 스크롤 진행률로 단계 켜기 */
+(()=>{
+  const wrap = document.getElementById('pinwrap');
+  const steps = [...document.querySelectorAll('#pinsteps .st')];
+  const bar = document.getElementById('pinbar');
+  let raf = 0, live = false;
+  function tick(){
+    const r = wrap.getBoundingClientRect();
+    const total = wrap.offsetHeight - innerHeight;
+    const p = Math.min(1, Math.max(0, -r.top / total));
+    bar.style.width = (p*100).toFixed(1) + '%';
+    const idx = Math.min(steps.length-1, Math.floor(p * steps.length * 0.999));
+    steps.forEach((s,i)=> s.classList.toggle('act', i === idx));
+    raf = 0;
+  }
+  addEventListener('scroll', ()=>{ if(!raf && live) raf = requestAnimationFrame(tick); }, {passive:true});
+  new IntersectionObserver(es=>{ live = es[0].isIntersecting; if(live) tick(); },{threshold:0}).observe(wrap);
+  tick();
+})();
+</script>
+</body>
+</html>

@@ -1,16 +1,16 @@
 {
-  "name": "DM 비서",
-  "short_name": "DM 비서",
-  "description": "댓글 하나가 손님이 되는 자동 길",
-  "start_url": "./index.html",
+  "name": "크리에이터 유틸리티",
+  "short_name": "크유",
+  "description": "크리에이터가 꺼내 쓰는 수익화 도구함",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "background_color": "#050609",
+  "theme_color": "#050609",
   "orientation": "portrait",
-  "background_color": "#F6F4FF",
-  "theme_color": "#F6F4FF",
   "icons": [
-    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
