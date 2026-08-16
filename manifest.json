@@ -1,16 +1,16 @@
 {
-  "name": "크리에이터 유틸리티",
-  "short_name": "크유",
-  "description": "크리에이터가 꺼내 쓰는 수익화 도구함",
+  "name": "아이디어 폴더",
+  "short_name": "아이디어",
+  "description": "떠오른 순간 담고, 시간이 갈수록 자산이 되는 아이디어 창고",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#050609",
-  "theme_color": "#050609",
   "orientation": "portrait",
+  "background_color": "#0D0D0D",
+  "theme_color": "#0D0D0D",
   "icons": [
-    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
