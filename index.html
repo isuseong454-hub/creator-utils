@@ -361,6 +361,26 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
 .how .row p{font-size:14.5px;line-height:1.65;color:var(--sub);padding-top:4px;word-break:keep-all}
 .how .row p b{color:var(--text)}
 
+/* 이 앱 쓰기 — 열기 + 설치(다운로드) */
+.use{border-radius:22px;padding:24px;background:var(--panel);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
+.use-qr{text-align:center;flex:none}
+.use-qr img{width:126px;height:126px;border-radius:14px;display:block;background:#fff;padding:7px}
+.use-qr span{display:block;margin-top:9px;font-size:11.5px;color:var(--mute);font-weight:700;line-height:1.5}
+.use-body .btn{font-size:14px;padding:13px 22px}
+.use-steps{margin-top:18px;display:flex;flex-direction:column;gap:0}
+.use-row{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13.5px;color:var(--sub);line-height:1.6}
+.use-row:last-child{border-bottom:0}
+.use-row b{color:var(--text);font-weight:800;font-size:13px}
+.use-row em{font-style:normal;color:var(--lime);font-weight:700}
+.use-note{margin-top:14px;font-size:12.5px;line-height:1.65;color:var(--mute);word-break:keep-all}
+@media(max-width:640px){
+  .use{grid-template-columns:1fr;gap:18px;justify-items:center;text-align:center}
+  .use-body{width:100%}
+  .use-row{grid-template-columns:1fr;gap:2px;text-align:left}
+}
+
 /* ── 로그인 게이트 (gt-) ─────────────────── */
 .gt{position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:24px;
   background:rgba(5,6,9,.78);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
@@ -928,6 +948,35 @@ const ICONS = {
 };
 const icImg = id => ICONS[id] ? `<img src="${ICONS[id]}" alt="">` : '';
 
+/* ── 앱 주소 + QR (상세 «이 앱 쓰기» 칸) ─────── */
+const APPS = {
+  idea:     {url:'https://isuseong454-hub.github.io/idea-folder/',     qr:'img/qr-idea.png'},
+  masters:  {url:'https://isuseong454-hub.github.io/Content-Masters/', qr:'img/qr-masters.png'},
+  carousel: {url:'https://isuseong454-hub.github.io/Carousel/',        qr:'img/qr-carousel.png'},
+  hub:      {url:'https://isuseong454-hub.github.io/content-hub/',     qr:'img/qr-hub.png'},
+  dm:       {url:'https://isuseong454-hub.github.io/DM-biseo/',        qr:'img/qr-dm.png'}
+};
+function useHtml(id, name){
+  const a = APPS[id]; if(!a) return '';
+  return `
+    <div class="sh-lab">이 앱 쓰기</div>
+    <div class="use">
+      <div class="use-qr">
+        <img src="${a.qr}" alt="${name} 주소 QR 코드">
+        <span>폰 카메라로<br>찍으면 열립니다</span>
+      </div>
+      <div class="use-body">
+        <a class="btn btn-lime" href="${a.url}" target="_blank" rel="noopener">지금 바로 열기 →</a>
+        <div class="use-steps">
+          <div class="use-row"><b>📱 아이폰</b><span>사파리로 열고 → 아래 <em>공유 ↑</em> → «홈 화면에 추가»</span></div>
+          <div class="use-row"><b>🤖 안드로이드</b><span>크롬으로 열고 → 메뉴 <em>⋮</em> → «앱 설치»</span></div>
+          <div class="use-row"><b>💻 컴퓨터</b><span>크롬·엣지 주소창 오른쪽 <em>설치 아이콘</em> 클릭</span></div>
+        </div>
+        <p class="use-note">설치하면 홈 화면에 아이콘이 생기고 앱처럼 전체 화면으로 열립니다. 앱스토어를 거치지 않아 용량을 거의 쓰지 않고, 업데이트도 자동입니다.</p>
+      </div>
+    </div>`;
+}
+
 /* ── 상세 페이지 보강 데이터 (막힘 → 전후 → 진행) ── */
 const EXTRA = {
   scan:{
@@ -1083,6 +1132,7 @@ function openSheet(id){
     ${ex?`
     <div class="sh-lab">HOW IT WORKS</div>
     <div class="how">${ex.how.map((x,i)=>`<div class="row"><div class="n">${i+1}</div><p><b>${x[0]}</b> — ${x[1]}</p></div>`).join('')}</div>`:''}
+    ${useHtml(f.id, f.name)}
     <div class="sheet-cta">
       <a class="btn btn-lime" href="${f.cta[1]}">${f.cta[0]}</a>
       <button class="btn btn-ghost" data-close>목록으로</button>
