@@ -1,10 +1,11 @@
-/* 아이디어 폴더 — 홈 화면 설치용 서비스 워커
-   ⚠️ 설계 원칙: «네트워크 우선»
-   - 온라인이면 항상 서버의 최신 파일을 쓴다  → «배포했는데 안 바뀜» 사고 방지
+/* DM 비서 — 홈 화면 설치용 서비스 워커
+   ⚠️ 설계 원칙: «네트워크 우선 + 최소 개입»
+   - 온라인이면 항상 서버의 최신 파일       → «배포했는데 안 바뀜» 사고 방지
    - 오프라인일 때만 캐시 사본을 꺼낸다
-   - 같은 주소(same-origin)의 GET만 손댄다   → 로그인·API·외부 요청은 건드리지 않음
+   - 같은 주소(same-origin)의 GET만 손댄다  → 인스타 OAuth 리다이렉트·Supabase 호출은 건드리지 않음
+   문제가 생기면 이 파일만 지우면 원래대로 돌아온다.
 */
-const CACHE = 'idea-folder-v1';
+const CACHE = 'dm-biseo-v1';
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -18,10 +19,11 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const req = e.request;
-  if (req.method !== 'GET') return;                       // POST 등은 그대로 통과
+  if (req.method !== 'GET') return;                       // POST(로그인·저장)는 그대로 통과
   let url;
   try { url = new URL(req.url); } catch (_) { return; }
-  if (url.origin !== self.location.origin) return;        // 외부 주소는 그대로 통과
+  if (url.origin !== self.location.origin) return;        // 페이스북·Supabase 등 외부는 통과
+  if (url.search) return;                                 // ?code=... OAuth 복귀는 손대지 않음
 
   e.respondWith((async () => {
     try {

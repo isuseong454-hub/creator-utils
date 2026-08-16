@@ -1,16 +1,16 @@
 {
-  "name": "아이디어 폴더",
-  "short_name": "아이디어",
-  "description": "떠오른 순간 담고, 시간이 갈수록 자산이 되는 아이디어 창고",
-  "start_url": "./",
+  "name": "DM 비서",
+  "short_name": "DM 비서",
+  "description": "댓글 하나가 손님이 되는 자동 길",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0D0D0D",
-  "theme_color": "#0D0D0D",
+  "background_color": "#F6F4FF",
+  "theme_color": "#F6F4FF",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
