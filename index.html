@@ -736,7 +736,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
       <div class="ws-card">
         <h4>내 수익화 지도</h4>
         <div class="ws-rail">
-          <div class="ws-node now"><div class="dot">01</div><div class="nm">판독</div></div>
+          <div class="ws-node now"><div class="dot">01</div><div class="nm">실행</div></div>
           <div class="ws-node"><div class="dot">02</div><div class="nm">소재</div></div>
           <div class="ws-node"><div class="dot">03</div><div class="nm">제작</div></div>
           <div class="ws-node"><div class="dot">04</div><div class="nm">비주얼</div></div>
@@ -782,6 +782,7 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
       <div class="ws-h1">내 앱</div>
       <div class="ws-sub">동행 중에는 이 도구들을 코드 하나로 씁니다. 반복 작업은 앱이 대신합니다.</div>
       <div class="ws-apps">
+        <a class="ws-app" href="https://isuseong454-hub.github.io/saenggak-daero/" target="_blank" rel="noopener"><img src="img/app-sgd.png" alt=""><div class="nm">생각대로</div><div class="st">실행 관리</div></a>
         <a class="ws-app" href="https://isuseong454-hub.github.io/Content-Masters/" target="_blank" rel="noopener"><img src="img/app-masters.png" alt=""><div class="nm">컨텐츠 마스터즈</div><div class="st">제작 · 훈련</div></a>
         <a class="ws-app" href="https://isuseong454-hub.github.io/idea-folder/" target="_blank" rel="noopener"><img src="img/app-idea.png" alt=""><div class="nm">아이디어 폴더</div><div class="st">소재 창고</div></a>
         <a class="ws-app" href="https://isuseong454-hub.github.io/Carousel/" target="_blank" rel="noopener"><img src="img/app-carousel.png" alt=""><div class="nm">캐러셀 공장</div><div class="st">비주얼</div></a>
@@ -858,16 +859,17 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
 /* ── 흐름 데이터 ─────────────────────────── */
 const FLOW = [
   {
-    id:'scan', cat:'STEP 01 · 진단', name:'계정 판독', tag:'무료',
-    desc:'출발점을 먼저 찍습니다. 지금 계정의 문제가 소재인지, 후킹인지, 전환인지 — 처방 한 장으로.',
-    tags:['퍼널 진단','후킹 점검','처방 1장'],
-    lead:'대부분의 크리에이터는 <b>어디가 막혔는지 모른 채</b> 콘텐츠만 계속 만듭니다. 판독은 그 막힌 지점을 찾는 일입니다. 계정 링크 하나만 보내주시면, 소재·후킹·전환 중 어디서 새고 있는지 기준에 따라 진단하고 처방을 드립니다.',
+    id:'sgd', cat:'STEP 01 · 실행', name:'생각대로', tag:'앱',
+    desc:'생각한 대로 살지 않으면, 사는 대로 살게 됩니다. 3초에 적고, 하나씩 지워나갑니다.',
+    tags:['3초 메모','실행 관리','달력 기록'],
+    lead:'수익화는 «좋은 생각»이 아니라 <b>실행한 것</b>에서만 나옵니다. 생각대로는 떠오른 순간 3초에 붙잡고, 그걸 «할 일»로 데려가서 하나씩 지워나가는 앱입니다. 로그인도 없이, 열면 바로 적을 수 있습니다.',
     feats:[
-      ['무엇을 보나','첫 화면에서 멈추게 하는가(후킹), 끝까지 보게 하는가(구조), 프로필로 오게 하는가(전환) — 세 관문을 순서대로 봅니다.'],
-      ['무엇을 받나','막힌 관문 하나와, 이번 주에 바꿀 것 한 가지가 적힌 처방. 길게 쓰지 않습니다. 실행할 수 있는 만큼만.'],
-      ['왜 무료인가','눈이 맞는지 확인하는 단계이기 때문입니다. 판독이 유용했다면, 그다음을 함께 가면 됩니다.']
+      ['3초에 적기','열면 바로 입력칸이 기다립니다. 화면 아래에 있어 엄지로 닿고, 적는 순간 사라지지 않게 저장됩니다.'],
+      ['세 갈래로 나누기','적은 줄이 «그냥 메모 · 아이디어 · 실행하기» 중 하나로 갈립니다. 실행할 것만 할 일 방으로 넘어갑니다.'],
+      ['하나씩 지워나가기','끝낸 줄에는 «완료!» 도장이 찍힙니다. 지운 만큼이 내가 생각대로 산 날의 기록이 됩니다.'],
+      ['달력에 남는 흔적','적은 날엔 점, 끝낸 날엔 ✓. 며칠째 이어왔는지가 숫자로 보입니다.']
     ],
-    cta:['무료 판독 신청','mailto:isuseong454@gmail.com?subject=무료 계정 판독 신청&body=계정 링크: ']
+    cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=생각대로 문의']
   },
   {
     id:'idea', cat:'STEP 02 · 소재', name:'아이디어 폴더', tag:'앱',
@@ -939,7 +941,7 @@ const FLOW = [
 
 /* ── 앱 아이콘 = 진짜 앱 아이콘 파일 (img/) ── */
 const ICONS = {
-  scan:'img/app-scan.png',      /* 서브로고 시트 · 전략 컨설팅(조준경) */
+  sgd:'img/app-sgd.png',        /* 생각대로 실제 아이콘(올리브 펜슬) */
   idea:'img/app-idea.png',      /* 아이디어 폴더 실제 아이콘 */
   masters:'img/app-masters.png',/* 컨텐츠 마스터즈 PWA 아이콘 */
   carousel:'img/app-carousel.png',
@@ -950,6 +952,7 @@ const icImg = id => ICONS[id] ? `<img src="${ICONS[id]}" alt="">` : '';
 
 /* ── 앱 주소 + QR (상세 «이 앱 쓰기» 칸) ─────── */
 const APPS = {
+  sgd:      {url:'https://isuseong454-hub.github.io/saenggak-daero/',  qr:'img/qr-sgd.png'},
   idea:     {url:'https://isuseong454-hub.github.io/idea-folder/',     qr:'img/qr-idea.png'},
   masters:  {url:'https://isuseong454-hub.github.io/Content-Masters/', qr:'img/qr-masters.png'},
   carousel: {url:'https://isuseong454-hub.github.io/Carousel/',        qr:'img/qr-carousel.png'},
@@ -979,13 +982,13 @@ function useHtml(id, name){
 
 /* ── 상세 페이지 보강 데이터 (막힘 → 전후 → 진행) ── */
 const EXTRA = {
-  scan:{
-    pain:['열심히 올리는데, 왜 반응이 없는 걸까?','문제를 모른 채 콘텐츠만 쌓이는 상태 — 가장 흔하고, 가장 오래 갇히는 구간입니다.'],
-    before:'감으로 올리고, 조회수에 일희일비. 뭘 고쳐야 할지 몰라 전부를 의심함.',
-    after:'막힌 관문 하나를 알고 있음. 이번 주에 바꿀 것이 한 가지로 좁혀짐.',
-    how:[['계정 링크를 보냅니다','인스타그램 프로필 주소 하나면 됩니다. 준비물 없음.'],
-         ['세 관문으로 판독합니다','멈추게 하는가(후킹) · 끝까지 보는가(구조) · 프로필로 오는가(전환).'],
-         ['처방 한 장을 받습니다','막힌 관문 하나 + 이번 주에 바꿀 것 하나. 실행할 수 있는 만큼만.']]
+  sgd:{
+    pain:['하려던 건 많았는데, 오늘도 아무것도 안 했다.','생각한 대로 살지 않으면 사는 대로 살게 됩니다. 아이디어는 적지 않으면 3분 안에 사라집니다.'],
+    before:'머릿속에만 있는 계획. 떠오른 생각은 증발하고, 할 일은 미뤄진 채 쌓임.',
+    after:'적힌 것이 하나씩 지워짐. 며칠째 이어왔는지가 숫자로 보임.',
+    how:[['떠오르면 3초에 적습니다','열면 바로 입력칸. 화면 아래에 있어 엄지로 닿습니다.'],
+         ['무엇인지 고릅니다','그냥 메모 · 아이디어 · 실행하기 — 셋 중 하나. 실행할 것만 할 일 방으로.'],
+         ['하나씩 지워나갑니다','끝내면 «완료!» 도장. 달력에 흔적이 남고, 연속 일수가 쌓입니다.']]
   },
   idea:{
     pain:['오늘도 소재가 없어서 못 올렸다.','소재 고갈은 재능 문제가 아니라 «담는 장치»가 없는 문제입니다.'],
@@ -1031,17 +1034,21 @@ const EXTRA = {
 
 /* ── 상세 히어로 + 기능별 데모 목업 ─────────── */
 const DEMOS = {
-  scan:{
+  sgd:{
     hero:`<div class="pad">
-      <div class="mk-t">판독 리포트 — @your_account</div>
-      <div class="gate">① 후킹 — 스크롤을 멈추게 하는가 <span class="st">통과</span></div>
-      <div class="gate">② 구조 — 끝까지 보게 하는가 <span class="st">통과</span></div>
-      <div class="gate stuck">③ 전환 — 프로필로 오게 하는가 <span class="st">← 여기가 막힘</span></div>
-      <div class="rx">처방 · 프로필 첫 줄을 «누구를 위한 계정인지»가 보이게 바꾸세요. 이번 주는 이것 하나만.</div>
+      <div class="mk-t">오늘 · 3일째 생각대로 사는 중</div>
+      <div class="bub me">머리 감겨줄 때 손님이 꼭 묻는 그 질문 → 소재감</div>
+      <div class="bub">이번 주 릴스 3개 촬영하기</div>
+      <div style="margin-top:14px;text-align:center">
+        <span class="chip">그냥 메모</span><span class="chip">아이디어</span><span class="chip on">실행하기</span>
+      </div>
+      <div class="mk-cap">적으면 «이건 무엇인가요?» — 셋 중 하나만 고르면 끝</div>
     </div>`,
     demos:[
-      `<div class="mk"><span class="chip on">후킹</span><span class="fl-ar">→</span><span class="chip on">구조</span><span class="fl-ar">→</span><span class="chip on">전환</span><div class="mk-cap">세 관문을 순서대로 — 앞이 뚫려야 뒤가 의미 있습니다</div></div>`,
-      null, null]
+      `<div class="mk"><div class="bub me">앞머리 상담 영상 찍기</div><div class="mk-cap" style="text-align:left">화면 아래 입력칸 → 엄지로 바로. 로그인 없음</div></div>`,
+      `<div class="mk"><span class="chip">그냥 메모</span><span class="chip">아이디어</span><span class="chip on">실행하기</span><span class="fl-ar">→</span><span class="chip on">할 일 방</span></div>`,
+      `<div class="mk"><div class="bub" style="opacity:.6;text-decoration:line-through">이번 주 릴스 3개 촬영하기</div><div class="mk-cap" style="text-align:left">✓ 완료 — 지운 만큼이 생각대로 산 기록</div></div>`,
+      null]
   },
   idea:{
     hero:`<img src="img/hero-idea.jpg" alt="아이디어 폴더">`,
