@@ -361,6 +361,23 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
 .how .row p{font-size:14.5px;line-height:1.65;color:var(--sub);padding-top:4px;word-break:keep-all}
 .how .row p b{color:var(--text)}
 
+/* 이게 좋아요 (ucg-) */
+.ucg{margin-top:18px;padding:18px 20px;border-radius:18px;
+  background:rgba(200,241,105,.08);border:1px solid rgba(200,241,105,.28);
+  font-size:15px;line-height:1.7;color:var(--text);font-weight:700;word-break:keep-all}
+.ucg::before{content:"→ ";color:var(--lime);font-weight:900}
+.ucg .nx{display:block;margin-top:10px;font-weight:600;font-size:13px;color:var(--sub)}
+.uc-when{position:relative;margin-top:30px;padding:22px 24px 22px 52px;border-radius:20px;
+  background:rgba(255,255,255,.035);border:1px solid var(--panel-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1.55;word-break:keep-all}
+.uc-when::before{content:"“";position:absolute;left:20px;top:12px;font-size:36px;font-weight:900;
+  color:var(--lime);opacity:.85}
+@media(max-width:640px){
+  .uc-when{font-size:16px;padding:18px 18px 18px 44px}
+  .ucg{font-size:14px}
+}
+
 /* 이 앱 쓰기 — 열기 + 설치(다운로드) */
 .use{border-radius:22px;padding:24px;background:var(--panel);border:1px solid var(--panel-line);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.10);display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start}
@@ -859,82 +876,39 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0 calc(120px + en
 /* ── 흐름 데이터 ─────────────────────────── */
 const FLOW = [
   {
-    id:'sgd', cat:'STEP 01 · 실행', name:'생각대로', tag:'앱',
-    desc:'생각한 대로 살지 않으면, 사는 대로 살게 됩니다. 3초에 적고, 하나씩 지워나갑니다.',
-    tags:['3초 메모','실행 관리','달력 기록'],
-    lead:'수익화는 «좋은 생각»이 아니라 <b>실행한 것</b>에서만 나옵니다. 생각대로는 떠오른 순간 3초에 붙잡고, 그걸 «할 일»로 데려가서 하나씩 지워나가는 앱입니다. 로그인도 없이, 열면 바로 적을 수 있습니다.',
-    feats:[
-      ['3초에 적기','열면 바로 입력칸이 기다립니다. 화면 아래에 있어 엄지로 닿고, 적는 순간 사라지지 않게 저장됩니다.'],
-      ['세 갈래로 나누기','적은 줄이 «그냥 메모 · 아이디어 · 실행하기» 중 하나로 갈립니다. 실행할 것만 할 일 방으로 넘어갑니다.'],
-      ['하나씩 지워나가기','끝낸 줄에는 «완료!» 도장이 찍힙니다. 지운 만큼이 내가 생각대로 산 날의 기록이 됩니다.'],
-      ['달력에 남는 흔적','적은 날엔 점, 끝낸 날엔 ✓. 며칠째 이어왔는지가 숫자로 보입니다.']
-    ],
+    id:'sgd', cat:'STEP 01 · 메모', name:'생각대로', tag:'앱',
+    desc:'떠오르는 아이디어와 해야 할 일을 3초에 적고, 미루던 것을 하나씩 완료합니다.',
+    tags:['3초 메모','검색으로 다시 찾기','실행 완료'],
     cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=생각대로 문의']
   },
   {
-    id:'idea', cat:'STEP 02 · 소재', name:'아이디어 폴더', tag:'앱',
-    desc:'스치는 생각을 잃어버리지 않게. 떠오른 순간 담고, 릴스는 원고로 풀어서 소재 창고를 만듭니다.',
-    tags:['아이디어 수집','릴스 → 원고','소재 창고'],
-    lead:'좋은 콘텐츠는 책상 앞에서 나오지 않습니다. 길에서, 손님 앞에서, 밤에 스칩니다. <b>담는 장치가 없으면 소재는 증발합니다.</b> 아이디어 폴더는 떠오른 순간 한 줄로 담고, 참고하고 싶은 릴스는 음성까지 원고로 풀어 소재 창고에 쌓는 도구입니다.',
-    feats:[
-      ['한 줄 담기','떠오른 순간 앱을 열고 한 줄. 분류는 나중에 해도 됩니다. 잃어버리지 않는 것이 먼저입니다.'],
-      ['폴더 소재 창고','담은 조각이 주제별 폴더로 정리됩니다. 올릴 때가 되면 창고에서 꺼내 쓰기만 하면 됩니다.'],
-      ['릴스 → 원고','잘 터진 릴스를 넣으면 말한 내용이 통째로 글이 됩니다. 내 컴퓨터에서 돌아가는 AI라 비용도 0원.'],
-      ['제작의 연료','쌓인 소재는 다음 단계(제작·훈련)로 바로 이어집니다. 소재 고갈이 사라집니다.']
-    ],
+    id:'idea', cat:'STEP 02 · 정리', name:'아이디어 폴더', tag:'앱',
+    desc:'짧은 메모로 안 될 때 길게 정리하고, 모인 글을 전자책으로 발행합니다.',
+    tags:['긴 글 정리','전자책 목차','발행'],
     cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=아이디어 폴더 문의']
   },
   {
-    id:'masters', cat:'STEP 03 · 제작 · 훈련', name:'컨텐츠 마스터즈', tag:'핵심 앱',
-    desc:'벤치마킹을 분해하고, 원고를 훈련하고, 기준으로 판독합니다. 보는 눈을 기르는 훈련장.',
-    tags:['벤치마킹 분해','원고 트레이닝','판독 기준','후킹 100'],
-    lead:'감으로 만들면 감으로 무너집니다. 컨텐츠 마스터즈는 <b>잘 되는 콘텐츠를 기준으로 분해하고, 내 원고를 같은 기준으로 훈련하는</b> 앱입니다. 후킹·구조·전환 — 조회수를 만드는 요소를 눈이 아니라 기준으로 다루게 됩니다.',
-    feats:[
-      ['벤치마킹 시트','잘 되는 콘텐츠를 링크로 담으면 한 줄씩 쌓입니다. 내 분야의 «잘 되는 이유» 데이터베이스가 됩니다.'],
-      ['AI 분해','담은 콘텐츠가 후킹·구조·타겟으로 쪼개집니다. "왜 잘 됐는지"가 감상이 아니라 문장으로 남습니다.'],
-      ['트레이닝룸','3초 후킹 판별, 썸네일 대진 같은 훈련으로 보는 눈을 기릅니다. 하루 5분이면 충분합니다.'],
-      ['원고 손질 방','쓴 원고를 펜으로 쓸어 칠하며 다듬습니다. 첫 문장부터 마지막 전환까지, 기준에 대고.'],
-      ['고객의 방','내 고객의 문제·욕구·회피·저항을 네 바구니에 모읍니다. 콘텐츠가 겨냥할 과녁이 생깁니다.']
-    ],
+    id:'masters', cat:'STEP 03 · 반응', name:'컨텐츠 마스터즈', tag:'핵심 앱',
+    desc:'이미 반응한 콘텐츠를 공략집 삼아 고객을 분석하고, 내 콘텐츠의 반응을 올립니다.',
+    tags:['공략집','고객 분석','반응 상승'],
     cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=컨텐츠 마스터즈 문의']
   },
   {
-    id:'carousel', cat:'STEP 04 · 비주얼', name:'캐러셀 공장', tag:'앱',
-    desc:'원고를 넣으면 피드용 캐러셀이 나옵니다. 디자이너 없이, 일관된 톤으로.',
-    tags:['1080×1350','표지 + 상세','일관된 톤'],
-    lead:'글이 좋아도 옷이 없으면 피드에서 죽습니다. 캐러셀 공장은 <b>원고를 넣으면 표지와 상세 장이 완성된 캐러셀로</b> 나오는 도구입니다. 매번 디자인을 고민하지 않아도, 계정 전체가 한 톤으로 유지됩니다.',
-    feats:[
-      ['표지 짜임','첫 장은 멈추게 하는 표지 구조가 미리 설계되어 있습니다. 문구만 바꿔 끼우면 됩니다.'],
-      ['상세 짜임','뒷장은 읽게 하는 본문 구조. 글의 리듬에 맞춰 장이 나뉩니다.'],
-      ['한 벌의 옷','색·서체·여백이 고정되어 계정 전체가 한 톤으로. 피드가 쌓일수록 브랜드처럼 보입니다.'],
-      ['인스타 규격 그대로','1080×1350으로 바로 내보내 업로드만 하면 끝. 디자인 툴이 필요 없습니다.']
-    ],
+    id:'carousel', cat:'STEP 04 · 분위기', name:'캐러셀 공장', tag:'앱',
+    desc:'글을 넣으면 AI 템플릿이 감각적인 분위기를 입혀줍니다.',
+    tags:['AI 템플릿','시각적 분위기','1080×1350'],
     cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=캐러셀 공장 문의']
   },
   {
-    id:'hub', cat:'STEP 05 · 전환', name:'컨텐츠 허브', tag:'앱',
-    desc:'프로필에 온 사람을 고객으로. 링크 하나에 전문성과 상품이 정리된 나만의 홈.',
-    tags:['링크인바이오','전문성 가시화','예약 · 상품'],
-    lead:'조회수가 아무리 나와도 프로필 링크가 허술하면 수익은 새어 나갑니다. 컨텐츠 허브는 <b>프로필에 온 사람이 당신의 전문성을 30초 안에 믿게 만드는</b> 한 페이지입니다. 링크 하나로 강의·상품·예약이 정리됩니다.',
-    feats:[
-      ['한 페이지 홈','링크 하나에 소개·대표 콘텐츠·상품·예약이 정리됩니다. 프로필에 온 사람이 30초 안에 믿게.'],
-      ['전문성 가시화','이력·후기·사례가 구조로 보입니다. "이 사람 뭐 하는 사람이지?"가 사라집니다.'],
-      ['전환 동선 설계','보고 → 믿고 → 문의하기까지의 동선이 한 화면 안에 설계되어 있습니다.'],
-      ['내 손으로 수정','편집 화면에서 언제든 내용과 순서를 바꿉니다. 외주 없이, 그 자리에서.']
-    ],
+    id:'hub', cat:'STEP 05 · 축적', name:'컨텐츠 허브', tag:'앱',
+    desc:'흘러가던 고객이 쌓입니다. 쌓인 고객이 곧 자산이 됩니다.',
+    tags:['고객의 축적','전문성 가시화','내 공간'],
     cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=컨텐츠 허브 문의']
   },
   {
-    id:'dm', cat:'STEP 06 · 소통 · 판매', name:'DM 비서', tag:'앱',
-    desc:'댓글과 DM에 자동으로 응답합니다. 문의를 놓치지 않는 것이 곧 매출입니다.',
-    tags:['인스타 연동','자동 응답','문의 → 판매'],
-    lead:'문의는 콘텐츠가 잘 될 때 몰려오고, 그때 당신은 가장 바쁩니다. DM 비서는 <b>인스타그램과 연동해 댓글·DM에 자동으로 응답하는</b> 도구입니다. 놓친 문의 하나가 놓친 고객 한 명입니다.',
-    feats:[
-      ['인스타 공식 연동','Meta 공식 API 방식으로 계정을 연결합니다. 비밀번호를 맡기는 위험한 방식이 아닙니다.'],
-      ['키워드 자동 응답','"가격", "예약" 같은 키워드에 준비된 답이 바로 나갑니다. 새벽 문의도 놓치지 않습니다.'],
-      ['댓글 → DM 연결','댓글 단 사람에게 DM으로 링크를 보내는 흐름을 자동화합니다. 참여가 전환이 됩니다.'],
-      ['판매로 이어짐','응답 끝에는 허브·상품 링크가 붙습니다. 소통이 그대로 매출 동선이 됩니다.']
-    ],
+    id:'dm', cat:'STEP 06 · 응대', name:'DM 비서', tag:'앱',
+    desc:'계정 연결부터 간편합니다. DM에 쏟던 시간과 에너지를 돌려받습니다.',
+    tags:['간편한 연결','자동 응대','시간·에너지 절약'],
     cta:['자세히 문의','mailto:isuseong454@gmail.com?subject=DM 비서 문의']
   }
 ];
@@ -980,55 +954,62 @@ function useHtml(id, name){
     </div>`;
 }
 
-/* ── 상세 페이지 보강 데이터 (막힘 → 전후 → 진행) ── */
-const EXTRA = {
+/* ── 이럴 때 · 이렇게 쓰면 · 이게 좋아요 (사장님 설명 그대로) ── */
+const UC = {
   sgd:{
-    pain:['하려던 건 많았는데, 오늘도 아무것도 안 했다.','생각한 대로 살지 않으면 사는 대로 살게 됩니다. 아이디어는 적지 않으면 3분 안에 사라집니다.'],
-    before:'머릿속에만 있는 계획. 떠오른 생각은 증발하고, 할 일은 미뤄진 채 쌓임.',
-    after:'적힌 것이 하나씩 지워짐. 며칠째 이어왔는지가 숫자로 보임.',
-    how:[['떠오르면 3초에 적습니다','열면 바로 입력칸. 화면 아래에 있어 엄지로 닿습니다.'],
-         ['무엇인지 고릅니다','그냥 메모 · 아이디어 · 실행하기 — 셋 중 하나. 실행할 것만 할 일 방으로.'],
-         ['하나씩 지워나갑니다','끝내면 «완료!» 도장. 달력에 흔적이 남고, 연속 일수가 쌓입니다.']]
+    when:'좋은 생각은 자꾸 떠오르는데,<br>맨날 미루다 미루다 끝나버릴 때',
+    how:[
+      ['컨텐츠 만들다 좋은 생각이 들면','빠르게 켜서 3초에 적습니다. 아이디어든 해야 할 일이든.'],
+      ['나중에 검색으로','그때 내가 생각해낸 것을 쉽게 다시 찾습니다.'],
+      ['미루던 것을 정해두고','보면서 하나씩 완료합니다.']
+    ],
+    good:'생각한 대로 살지 않으면, 사는 대로 생각하게 됩니다. 내 생각대로 살게 만들어 주는 앱입니다.',
+    next:'길게 정리하고 싶어지면 → 아이디어 폴더로 넘어갑니다.'
   },
   idea:{
-    pain:['오늘도 소재가 없어서 못 올렸다.','소재 고갈은 재능 문제가 아니라 «담는 장치»가 없는 문제입니다.'],
-    before:'스친 생각이 하루 만에 증발. 올릴 때가 되면 머리가 하얘짐.',
-    after:'꺼내 쓰기만 하면 되는 소재 창고. 잘 된 릴스는 원고째로 쌓여 있음.',
-    how:[['스치면 한 줄로 담습니다','길에서, 손님 앞에서, 밤에 — 떠오른 순간 앱을 열고 한 줄.'],
-         ['릴스는 원고로 풉니다','참고하고 싶은 릴스를 넣으면 말한 내용이 전부 글이 됩니다.'],
-         ['만들 때 꺼냅니다','쌓인 소재가 다음 단계(제작·훈련)의 연료가 됩니다.']]
+    when:'생각은 쌓이는데<br>흩어진 채로만 있을 때',
+    how:[
+      ['짧은 메모로 안 될 때','여기서 내 생각을 길게 정리합니다.'],
+      ['쓴 글을 전자책 꼭지로','올려서 목차를 채웁니다.'],
+      ['목차가 차면','전자책 파일로 발행합니다.']
+    ],
+    good:'흩어져 있던 생각이 한 권의 책이 됩니다 — 팔 수 있는 내 상품으로.'
   },
   masters:{
-    pain:['잘 되는 사람 걸 봐도, 뭐가 다른지 모르겠다.','보는 눈이 없으면 벤치마킹은 그냥 구경입니다.'],
-    before:'감으로 만들고 감으로 무너짐. 잘 돼도 왜 잘 됐는지 모름.',
-    after:'후킹·구조·전환을 기준으로 다룸. 잘 된 이유가 문장으로 남음.',
-    how:[['잘 되는 콘텐츠를 담습니다','내 분야에서 터진 콘텐츠를 앱에 수집합니다.'],
-         ['기준으로 분해합니다','후킹·구조·타겟으로 쪼개져 «왜 잘 됐는지»가 남습니다.'],
-         ['내 원고를 훈련합니다','같은 기준에 내 원고를 대고 다듬는 트레이닝 방이 있습니다.']]
+    when:'열심히 만드는데<br>반응이 안 올라올 때',
+    how:[
+      ['이미 사람들이 반응한 콘텐츠를 모읍니다','그게 공략집입니다.'],
+      ['그걸로 고객을 분석합니다','무엇에 반응하는 사람인지.'],
+      ['그 답을 내 콘텐츠에 적용합니다','같은 기준으로 다음 편을 만듭니다.']
+    ],
+    good:'방법은 이게 전부입니다. 반응한 것에서 배워, 내 콘텐츠의 반응을 올립니다.'
   },
   carousel:{
-    pain:['내용은 좋은데, 피드에서 안 눌린다.','글이 좋아도 옷이 없으면 스쳐 지나갑니다.'],
-    before:'장마다 디자인 고민. 올릴 때마다 톤이 들쭉날쭉.',
-    after:'원고만 넣으면 한 톤의 캐러셀. 피드가 쌓일수록 브랜드처럼 보임.',
-    how:[['원고를 붙여넣습니다','이미 쓴 글이면 됩니다. 디자인 지식 불필요.'],
-         ['짜임을 고릅니다','멈추게 하는 표지 짜임 + 읽게 하는 상세 짜임.'],
-         ['그대로 내보냅니다','1080×1350, 인스타그램에 바로 올리는 규격.']]
+    when:'내가 그냥 올리면<br>분위기가 안 살 때',
+    how:[
+      ['올릴 글을 넣습니다','이미 써둔 글이면 됩니다.'],
+      ['AI 템플릿이','시각적인 분위기를 입혀줍니다.'],
+      ['완성된 카드를','그대로 올립니다. 1080×1350 규격 그대로.']
+    ],
+    good:'디자인 감각이 없어도, «나만의 감각적인 분위기»가 나옵니다.'
   },
   hub:{
-    pain:['프로필까지 왔는데, 링크에서 다 새어 나간다.','조회수의 마지막 1미터 — 여기가 뚫려 있으면 앞의 전부가 헛돕니다.'],
-    before:'링크 하나 덜렁. 들어와도 뭐 하는 사람인지 모르고 나감.',
-    after:'30초 안에 전문성이 보이는 한 페이지. 문의 동선이 한 줄로 이어짐.',
-    how:[['보여줄 것을 정리합니다','대표 콘텐츠 · 이력 · 상품을 구조에 채워 넣습니다.'],
-         ['동선을 배치합니다','보고 → 믿고 → 문의하기까지 한 화면 안에서 끝나게.'],
-         ['프로필에 겁니다','링크 하나로 교체. 수정은 언제든 내 손으로.']]
+    when:'고객이 그냥 흘러가서,<br>매번 아무것도 남지 않을 때',
+    how:[
+      ['고객이 좋아하는 정보를 모아','내 고객이 좋아할 공간을 만듭니다.'],
+      ['내 전문성을','눈에 보이게 둡니다.'],
+      ['들어온 고객이 빠져나가지 않고','쌓입니다.']
+    ],
+    good:'고객이 «축적»됩니다. 쌓일수록 큰 힘이 되고, 가능성이 됩니다.'
   },
   dm:{
-    pain:['문의가 몰려올 땐, 내가 제일 바쁠 때다.','답하다 하루가 끝나거나, 놓쳐서 고객이 식거나. 둘 다 손해입니다.'],
-    before:'새벽 문의 놓침. 같은 답을 하루에 수십 번 복사·붙여넣기.',
-    after:'키워드에 자동 응답. 소통이 그대로 매출 동선이 됨.',
-    how:[['인스타그램을 연결합니다','Meta 공식 API 방식으로 계정을 안전하게 연동.'],
-         ['키워드와 답을 등록합니다','"가격" "예약" 같은 말에 준비된 답이 바로 나갑니다.'],
-         ['흐름이 자동으로 돕니다','댓글 → DM → 허브·상품 링크까지 이어지는 판매 동선.']]
+    when:'DM을 일일이 다 보내느라<br>시간과 에너지가 다 빠질 때',
+    how:[
+      ['내 계정을 아주 간편하게 연결합니다','복잡한 설정이 없습니다.'],
+      ['자주 오는 말에','답을 등록해 둡니다.'],
+      ['그다음부터는','알아서 나갑니다.']
+    ],
+    good:'다른 건 비싸고, 계정 연결부터 어렵습니다. 간편함과 편의성에서 압도적입니다.'
   }
 };
 
@@ -1044,49 +1025,39 @@ const DEMOS = {
       </div>
       <div class="mk-cap">적으면 «이건 무엇인가요?» — 셋 중 하나만 고르면 끝</div>
     </div>`,
-    demos:[
-      `<div class="mk"><div class="bub me">앞머리 상담 영상 찍기</div><div class="mk-cap" style="text-align:left">화면 아래 입력칸 → 엄지로 바로. 로그인 없음</div></div>`,
-      `<div class="mk"><span class="chip">그냥 메모</span><span class="chip">아이디어</span><span class="chip on">실행하기</span><span class="fl-ar">→</span><span class="chip on">할 일 방</span></div>`,
-      `<div class="mk"><div class="bub" style="opacity:.6;text-decoration:line-through">이번 주 릴스 3개 촬영하기</div><div class="mk-cap" style="text-align:left">✓ 완료 — 지운 만큼이 생각대로 산 기록</div></div>`,
-      null]
+    demos:[null,null,
+      `<div class="mk"><div class="bub" style="opacity:.6;text-decoration:line-through">이번 주 릴스 3개 촬영하기</div><div class="mk-cap" style="text-align:left">✓ 완료 — 지운 만큼이 생각대로 산 기록</div></div>`]
   },
   idea:{
     hero:`<img src="img/hero-idea.jpg" alt="아이디어 폴더">`,
-    demos:[
-      `<div class="mk"><div class="bub me">머리 감겨줄 때 손님이 꼭 물어보는 그 질문 → 소재감</div><span class="chip on">+ 담김</span><span class="chip">창고에 47개</span></div>`,
-      null,
-      `<div class="mk"><span class="chip">🎬 잘 터진 릴스</span><span class="fl-ar">→</span><span class="chip on">✎ 원고 전문</span><div style="margin-top:10px" class="skl"></div><div class="skl dim" style="margin-top:6px;width:72%"></div></div>`,
+    demos:[null,
+      `<div class="mk"><span class="chip">메모 조각</span><span class="fl-ar">→</span><span class="chip on">전자책 꼭지</span><div class="mk-cap" style="text-align:left">목차가 한 칸씩 채워집니다</div></div>`,
       null]
   },
   masters:{
     hero:`<img src="img/hero-masters.jpg" alt="컨텐츠 마스터즈">`,
     demos:[
-      `<img class="shotimg" src="img/shot-masters-sheet.jpg" alt="벤치마킹 시트 실제 화면">`,
-      `<img class="shotimg" src="img/shot-masters-row.jpg" alt="분해된 콘텐츠 — 조회수 124만">`,
-      `<img class="shotimg" src="img/shot-masters-training.jpg" alt="트레이닝 룸 실제 화면">`,
-      `<div class="mk" style="font-size:13px;line-height:1.9;color:var(--sub)">첫 문장 훈련 · <b style="color:var(--lime);border-bottom:1px solid rgba(200,241,105,.5)">"아직도 아침마다 이러세요?"</b><span class="mk-cap" style="display:block;text-align:left;margin-top:6px">설명형 → 질문형 후킹으로 교정</span></div>`,
-      `<img class="shotimg" src="img/shot-masters-customer.jpg" alt="고객의 방 — 수배지">`]
+      `<img class="shotimg" src="img/shot-masters-sheet.jpg" alt="공략집 — 반응한 콘텐츠 모으기">`,
+      `<img class="shotimg" src="img/shot-masters-customer.jpg" alt="고객 분석">`,
+      `<img class="shotimg" src="img/shot-masters-row.jpg" alt="분해된 콘텐츠 — 조회수 124만">`]
   },
   carousel:{
-    hero:`<img src="img/shot-carousel.jpg" alt="캐러셀 공장 실제 편집기 — 1080×1350 표지형">`,
-    demos:[null, null,
-      `<div class="mk"><div class="ccards" style="padding:6px 0"><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div></div><div class="mk-cap">색·서체·여백 고정 — 피드가 쌓일수록 브랜드처럼</div></div>`,
+    hero:`<img src="img/shot-carousel.jpg" alt="캐러셀 공장 실제 편집기">`,
+    demos:[null,
+      `<div class="mk"><div class="ccards" style="padding:6px 0"><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div><div class="ccard" style="width:64px;padding:8px"><div class="skl" style="width:60%"></div><div class="skl dim"></div></div></div><div class="mk-cap">AI 템플릿이 입혀준 분위기</div></div>`,
       null]
   },
   hub:{
     hero:`<img src="img/hero-hub.jpg" alt="컨텐츠 허브">`,
     demos:[
-      `<div class="mk"><div class="pfrow"><div class="av"></div><div style="flex:1"><div class="skl" style="width:45%"></div><div class="skl dim" style="margin-top:6px;width:70%"></div></div></div><span class="chip on">대표 콘텐츠</span><span class="chip">이력</span><span class="chip">후기</span><span class="chip">예약</span></div>`,
+      `<div class="mk"><div class="pfrow"><div class="av"></div><div style="flex:1"><div class="skl" style="width:45%"></div><div class="skl dim" style="margin-top:6px;width:70%"></div></div></div><span class="chip on">대표 콘텐츠</span><span class="chip">이력</span><span class="chip">후기</span><span class="chip">상품</span></div>`,
       null,
-      `<div class="mk"><span class="chip">보고</span><span class="fl-ar">→</span><span class="chip">믿고</span><span class="fl-ar">→</span><span class="chip on">문의하기</span><div class="mk-cap">한 화면 안에서 끝나는 전환 동선</div></div>`,
-      null]
+      `<div class="mk"><span class="chip">흘러감</span><span class="fl-ar">→</span><span class="chip on">쌓임</span><div class="mk-cap">고객이 축적됩니다</div></div>`]
   },
   dm:{
     hero:`<img src="img/hero-dm.jpg" alt="DM 비서">`,
-    demos:[
-      null,
+    demos:[null,
       `<div class="mk"><div class="bub"><span class="who">고객 · 새벽 2:14</span>가격이 어떻게 되나요?</div><div class="bub me"><span class="who">DM 비서 · 자동응답 3초</span>안녕하세요! 시술별 안내를 바로 보내드릴게요 → 링크</div></div>`,
-      `<div class="mk"><span class="chip">💬 댓글 "정보 주세요"</span><span class="fl-ar">→</span><span class="chip">DM 자동 발송</span><span class="fl-ar">→</span><span class="chip on">허브 · 상품 링크</span></div>`,
       null]
   }
 };
@@ -1118,7 +1089,7 @@ const sheetBody = document.getElementById('sheetBody');
 let lastScroll = 0;
 function openSheet(id){
   const f = FLOW.find(x=>x.id===id); if(!f) return;
-  const ex = EXTRA[f.id];
+  const uc = UC[f.id];
   const dm = DEMOS[f.id] || {};
   sheetBody.innerHTML = `
     <div class="sheet-ic">${icImg(f.id)}</div>
@@ -1126,19 +1097,12 @@ function openSheet(id){
     <h2>${f.name}</h2>
     <div class="tag-row">${f.tags.map(t=>`<span>${t}</span>`).join('')}</div>
     ${dm.hero?`<div class="sheet-hero">${dm.hero}</div>`:''}
-    ${ex?`
-    <div class="pain">${ex.pain[0]}<small>${ex.pain[1]}</small></div>
-    <div class="ba">
-      <div class="b"><span class="k">BEFORE</span>${ex.before}</div>
-      <div class="arr"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></div>
-      <div class="a"><span class="k">AFTER</span>${ex.after}</div>
-    </div>`:''}
-    <p class="lead">${f.lead}</p>
-    <div class="sh-lab">WHAT YOU GET</div>
-    <div class="feats">${f.feats.map((x,i)=>`<div class="feat"><h4>${x[0]}</h4><p>${x[1]}</p>${(dm.demos&&dm.demos[i])||''}</div>`).join('')}</div>
-    ${ex?`
-    <div class="sh-lab">HOW IT WORKS</div>
-    <div class="how">${ex.how.map((x,i)=>`<div class="row"><div class="n">${i+1}</div><p><b>${x[0]}</b> — ${x[1]}</p></div>`).join('')}</div>`:''}
+    ${uc?`
+    <div class="sh-lab">이럴 때</div>
+    <div class="uc-when">${uc.when}</div>
+    <div class="sh-lab">이렇게 쓰면</div>
+    <div class="how">${uc.how.map((x,i)=>`<div class="row"><div class="n">${i+1}</div><p><b>${x[0]}</b> — ${x[1]}${(dm.demos&&dm.demos[i])||''}</p></div>`).join('')}</div>
+    <div class="ucg">${uc.good}${uc.next?`<span class="nx">${uc.next}</span>`:''}</div>`:''}
     ${useHtml(f.id, f.name)}
     <div class="sheet-cta">
       <a class="btn btn-lime" href="${f.cta[1]}">${f.cta[0]}</a>
